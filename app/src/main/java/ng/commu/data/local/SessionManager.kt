@@ -10,19 +10,13 @@ import javax.inject.Singleton
 
 @Singleton
 class SessionManager @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext private val context: Context
 ) {
     private val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
 
-    private val sharedPreferences: SharedPreferences = EncryptedSharedPreferences.create(
-        context,
-        "commung_secure_prefs",
-        masterKey,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
+    private val sharedPreferences: SharedPreferences = createEncryptedPreferences()
 
     fun saveSessionToken(token: String) {
         sharedPreferences.edit().putString(KEY_SESSION_TOKEN, token).apply()
@@ -40,7 +34,36 @@ class SessionManager @Inject constructor(
         return getSessionToken() != null
     }
 
+    private fun createEncryptedPreferences(): SharedPreferences {
+        return try {
+            EncryptedSharedPreferences.create(
+                context,
+                PREFS_FILE_NAME,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (e: Exception) {
+            // Handle corrupted preferences by deleting and recreating
+            context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .clear()
+                .commit()
+
+            context.deleteSharedPreferences(PREFS_FILE_NAME)
+
+            EncryptedSharedPreferences.create(
+                context,
+                PREFS_FILE_NAME,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        }
+    }
+
     companion object {
         private const val KEY_SESSION_TOKEN = "session_token"
+        private const val PREFS_FILE_NAME = "commung_secure_prefs"
     }
 }
