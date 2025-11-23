@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">커뮹</string>
+
+    <!-- Authentication -->
+    <string name="auth_login_name">ID</string>
+    <string name="auth_password">비밀번호</string>
+    <string name="auth_password_confirm">비밀번호 (재입력)</string>
+    <string name="auth_login">로그인</string>
+    <string name="auth_logout">로그아웃</string>
+    <string name="auth_logout_confirm_title">로그아웃</string>
+    <string name="auth_logout_confirm_message">정말 로그아웃하시겠습니까?</string>
+    <string name="auth_sign_in">로그인</string>
+    <string name="auth_sign_up">회원가입</string>
+    <string name="auth_create_account">계정 만들기</string>
+    <string name="auth_already_have_account">이미 계정이 있으신가요?</string>
+    <string name="auth_no_account">계정이 없으신가요?</string>
+    <string name="auth_password_min_length">비밀번호는 최소 8자 이상이어야 합니다</string>
+    <string name="auth_passwords_not_match">비밀번호가 일치하지 않습니다</string>
+
+    <!-- Navigation -->
+    <string name="nav_boards">게시판</string>
+    <string name="nav_my_communities">내 커뮤</string>
+    <string name="nav_recruiting">모집 중</string>
+    <string name="nav_profile">프로필</string>
+    <string name="nav_post">게시글</string>
+    <string name="nav_notifications">알림</string>
+    <string name="nav_home">홈</string>
+    <string name="nav_messages">메시지</string>
+    <string name="nav_console">콘솔</string>
+    <string name="nav_communities">커뮤니티</string>
+    <string name="nav_account">계정</string>
+
+    <!-- Loading -->
+    <string name="loading_boards">게시판 불러오는 중...</string>
+    <string name="loading_posts">게시글 불러오는 중...</string>
+    <string name="loading_post">게시글 불러오는 중...</string>
+    <string name="loading_communities">커뮤 불러오는 중...</string>
+    <string name="loading_recruiting_communities">모집 중인 커뮤 불러오는 중...</string>
+    <string name="loading_notifications">알림 불러오는 중...</string>
+
+    <!-- Empty States -->
+    <string name="empty_no_boards">게시판이 없습니다</string>
+    <string name="empty_no_posts">게시글이 없습니다</string>
+    <string name="empty_no_comments">댓글이 없습니다</string>
+    <string name="empty_no_communities">커뮤가 없습니다</string>
+    <string name="empty_no_recruiting">모집 중인 커뮤가 없습니다</string>
+    <string name="empty_communities_message">커뮤에 가입하면 여기에 표시됩니다</string>
+    <string name="empty_recruiting_message">나중에 새로운 커뮤를 확인해보세요</string>
+
+    <!-- Notifications -->
+    <string name="notification_empty">아직 알림이 없습니다</string>
+    <string name="notification_mark_all_read">모두 읽음으로 표시</string>
+
+    <!-- Announcements -->
+    <string name="announcements_title">공지사항</string>
+    <string name="announcements_empty">공지사항 없음</string>
+    <string name="announcements_empty_description">커뮤니티 공지사항이 여기에 표시됩니다</string>
+
+    <!-- Errors -->
+    <string name="error_loading_posts">게시글 불러오기 실패</string>
+    <string name="error_loading_post">게시글 불러오기 실패</string>
+    <string name="error_post_not_found">게시글을 찾을 수 없습니다</string>
+    <string name="error_login_failed">로그인 실패</string>
+    <string name="error_load_communities">커뮤 불러오기 실패</string>
+    <string name="error_load_recruiting_communities">모집 중인 커뮤 불러오기 실패</string>
+    <string name="error_load_boards">게시판 불러오기 실패</string>
+    <string name="error_load_hashtags">해시태그 불러오기 실패</string>
+    <string name="error_load_posts">게시글 불러오기 실패</string>
+    <string name="error_load_post">게시글 불러오기 실패</string>
+    <string name="error_load_notifications">알림 불러오기 실패</string>
+
+    <!-- Actions -->
+    <string name="action_retry">다시 시도</string>
+    <string name="action_clear_all">전체 해제</string>
+    <string name="action_delete">삭제</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_post">게시</string>
+    <string name="action_posting">게시 중...</string>
+    <string name="action_reply">답글</string>
+
+    <!-- Hashtags -->
+    <string name="hashtag_popular">인기:</string>
+    <string name="hashtag_filters">필터:</string>
+
+    <!-- Status -->
+    <string name="status_active">활동 중</string>
+    <string name="status_ended">종료됨</string>
+    <string name="status_recruiting">모집 중</string>
+    <string name="status_admin">관리자</string>
+
+    <!-- Profile -->
+    <string name="profile_my_communities">내 커뮤</string>
+    <string name="profile_no_communities">커뮤가 없습니다</string>
+    <string name="profile_title">프로필</string>
+    <string name="profile_edit">프로필 편집</string>
+    <string name="profile_primary">기본 프로필</string>
+    <string name="profile_current_community">현재 커뮤니티</string>
+    <string name="profile_switch_profile">프로필 전환</string>
+    <string name="profile_profiles_available">%d개의 프로필 사용 가능</string>
+    <string name="profile_quick_actions">빠른 메뉴</string>
+    <string name="profile_bookmarks">북마크</string>
+    <string name="profile_search_posts">게시글 검색</string>
+    <string name="profile_scheduled_posts">예약 게시글</string>
+    <string name="profile_announcements">공지사항</string>
+    <string name="profile_no_profile">프로필 없음</string>
+    <string name="profile_select_community">프로필을 보려면 커뮤니티를 선택하세요</string>
+    <string name="profile_no_bookmarks">북마크 없음</string>
+    <string name="profile_bookmarks_empty">북마크한 게시글이 여기에 표시됩니다</string>
+    <string name="profile_no_posts">게시글이 없습니다</string>
+    <string name="profile_send_message">메시지 보내기</string>
+
+    <!-- Account -->
+    <string name="account_title">계정</string>
+    <string name="account_information">계정 정보</string>
+    <string name="account_login_name">로그인 이름</string>
+    <string name="account_email">이메일</string>
+    <string name="account_verified">인증됨</string>
+    <string name="account_not_verified">미인증</string>
+    <string name="account_add_email">이메일 추가</string>
+    <string name="account_member_since">가입일</string>
+    <string name="account_security">보안</string>
+    <string name="account_change_password">비밀번호 변경</string>
+    <string name="account_change_email">이메일 변경</string>
+    <string name="account_log_out">로그아웃</string>
+    <string name="account_delete_account">계정 삭제</string>
+    <string name="account_delete_confirm_title">계정 삭제</string>
+    <string name="account_delete_confirm_message">정말 계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</string>
+
+    <!-- Communities -->
+    <string name="communities_title">커뮤니티</string>
+    <string name="communities_my_communities">내 커뮤니티</string>
+    <string name="communities_pending">%d개 대기 중</string>
+    <string name="communities_no_communities">커뮤니티 없음</string>
+    <string name="communities_join_message">커뮤니티에 가입하여 시작하세요</string>
+
+    <!-- Roles -->
+    <string name="role_owner">소유자</string>
+    <string name="role_admin">관리자</string>
+    <string name="role_moderator">모더레이터</string>
+    <string name="role_member">멤버</string>
+
+    <!-- Comments -->
+    <string name="comments_title">댓글</string>
+    <string name="comments_placeholder">댓글을 입력하세요...</string>
+    <string name="comments_replying_to">@%1$s님에게 답글</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_delete_post_title">게시글 삭제</string>
+    <string name="dialog_delete_post_message">이 게시글을 삭제하시겠습니까?</string>
+    <string name="dialog_delete_comment_title">댓글 삭제</string>
+    <string name="dialog_delete_comment_message">이 댓글을 삭제하시겠습니까?</string>
+
+    <!-- Post Editor -->
+    <string name="editor_tab_edit">편집</string>
+    <string name="editor_tab_preview">미리보기</string>
+    <string name="editor_markdown_help">마크다운 도움말</string>
+    <string name="editor_preview_empty">아직 미리볼 내용이 없습니다. 편집 탭에서 작성을 시작하세요.</string>
+    <string name="markdown_guide_title">마크다운 가이드</string>
+
+    <!-- Time -->
+    <string name="time_just_now">방금 전</string>
+    <string name="time_minutes_ago">%d분 전</string>
+    <string name="time_hours_ago">%d시간 전</string>
+    <string name="time_days_ago">%d일 전</string>
+
+    <!-- Accessibility -->
+    <string name="cd_back">뒤로</string>
+    <string name="cd_close">닫기</string>
+    <string name="cd_remove_filter">필터 제거</string>
+    <string name="cd_zoomed_image">확대된 이미지</string>
+    <string name="cd_switch_community">커뮤니티 전환</string>
+    <string name="cd_new_post">새 게시글</string>
+    <string name="cd_announcement">공지</string>
+    <string name="cd_pinned">고정됨</string>
+    <string name="cd_replies">답글</string>
+    <string name="cd_react">반응</string>
+    <string name="cd_bookmark">북마크</string>
+    <string name="cd_profile_picture">프로필 사진</string>
+    <string name="cd_change_picture">사진 변경</string>
+    <string name="cd_add_image">이미지 추가</string>
+    <string name="cd_remove">제거</string>
+    <string name="cd_save">저장</string>
+
+    <!-- Home Feed -->
+    <string name="home_select_community">커뮤니티 선택</string>
+    <string name="home_no_community">선택된 커뮤니티 없음</string>
+    <string name="home_no_profile">선택된 프로필 없음</string>
+    <string name="home_create_profile">%s 프로필 만들기</string>
+    <string name="home_no_posts">게시글이 없습니다</string>
+    <string name="home_be_first">첫 번째로 게시해보세요!</string>
+    <string name="home_error">오류</string>
+
+    <!-- Post Detail -->
+    <string name="post_failed_to_load">게시글을 불러올 수 없습니다</string>
+    <string name="post_replies_count">답글 (%d)</string>
+
+    <!-- Profile Settings -->
+    <string name="profile_uploading">업로드 중...</string>
+    <string name="profile_display_name">표시 이름</string>
+    <string name="profile_username">사용자 이름</string>
+    <string name="profile_username_valid">사용 가능한 사용자 이름입니다</string>
+    <string name="profile_bio">자기소개</string>
+    <string name="profile_bio_count">%d/500</string>
+
+    <!-- Post Composer -->
+    <string name="composer_new_post">새 게시글</string>
+    <string name="composer_posting_as">작성자:</string>
+    <string name="composer_placeholder_reply">답글을 작성하세요...</string>
+    <string name="composer_placeholder_post">무슨 생각을 하고 계신가요?</string>
+    <string name="composer_content_warning">콘텐츠 경고</string>
+    <string name="composer_cw_label">경고: %s</string>
+    <string name="composer_announcement">공지</string>
+    <string name="composer_schedule">예약</string>
+    <string name="composer_scheduled_future">예약 시간은 미래여야 합니다</string>
+    <string name="composer_uploading_images">이미지 업로드 중...</string>
+    <string name="composer_cw_placeholder">경고 텍스트</string>
+    <string name="composer_cw_example">예: 스포일러, 폭력</string>
+    <string name="composer_select_time">시간 선택</string>
+    <string name="action_ok">확인</string>
+    <string name="action_done">완료</string>
+    <string name="action_save">저장</string>
+
+    <!-- Account Settings -->
+    <string name="account_settings_title">계정 설정</string>
+    <string name="account_joined">가입일</string>
+    <string name="account_data_privacy">데이터 및 개인정보</string>
+    <string name="account_export_data">내 데이터 내보내기</string>
+    <string name="account_export_description">데이터 사본 요청</string>
+    <string name="account_current_password">현재 비밀번호</string>
+    <string name="account_new_password">새 비밀번호</string>
+    <string name="account_confirm_password">새 비밀번호 확인</string>
+    <string name="account_password_hint">최소 8자 이상</string>
+    <string name="account_passwords_mismatch">비밀번호가 일치하지 않습니다</string>
+    <string name="account_new_email">새 이메일</string>
+    <string name="account_verification_hint">이 주소로 확인 이메일이 발송됩니다.</string>
+    <string name="account_send_verification">확인 메일 보내기</string>
+    <string name="account_delete_warning">이 작업은 되돌릴 수 없습니다. 모든 데이터, 프로필, 게시글, 메시지가 영구적으로 삭제됩니다.</string>
+
+    <!-- Messages -->
+    <string name="messages_title">메시지</string>
+    <string name="messages_with_count">메시지 (%d)</string>
+    <string name="messages_mark_all_read">모두 읽음으로 표시</string>
+    <string name="messages_no_profile">선택된 프로필 없음</string>
+    <string name="messages_no_messages">메시지 없음</string>
+    <string name="messages_start_conversation">대화를 시작하세요!</string>
+    <string name="messages_no_messages_yet">아직 메시지가 없습니다</string>
+
+    <!-- Community Switcher -->
+    <string name="community_switch">커뮤니티 전환</string>
+    <string name="community_none">커뮤니티 없음</string>
+    <string name="community_join_message">아직 가입한 커뮤니티가 없습니다</string>
+
+    <!-- Search -->
+    <string name="search_posts_placeholder">게시글 검색...</string>
+    <string name="search_members_placeholder">이름 또는 사용자 이름으로 검색...</string>
+    <string name="search_min_characters">최소 2글자 이상 입력하세요</string>
+    <string name="search_no_results">결과 없음</string>
+    <string name="search_no_results_for">\"%1$s\"에 대한 게시글을 찾을 수 없습니다</string>
+
+    <!-- Member Directory -->
+    <string name="members_title">멤버</string>
+
+    <!-- Chat -->
+    <string name="chat_message_placeholder">메시지</string>
+    <string name="chat_type_message">메시지를 입력하세요...</string>
+
+    <!-- Share Post -->
+    <string name="share_post_title">게시글 공유</string>
+    <string name="share_search_placeholder">대화 검색...</string>
+    <string name="share_message_placeholder">메시지 추가 (선택사항)</string>
+    <string name="share_send">보내기</string>
+    <string name="share_no_conversations">아직 대화가 없습니다</string>
+    <string name="share_start_conversation">먼저 대화를 시작하세요</string>
+
+    <!-- Scheduled Posts -->
+    <string name="scheduled_no_posts">예약된 게시글 없음</string>
+    <string name="scheduled_posts_appear_here">예약한 게시글이 여기에 표시됩니다</string>
+    <string name="scheduled_images_count">%1$d개 이미지</string>
+    <string name="scheduled_images_count_plural">%1$d개 이미지</string>
+    <string name="scheduled_posts_title">예약 게시글</string>
+    <string name="scheduled_load_more">더 보기</string>
+    <string name="scheduled_delete_title">예약 게시글 삭제</string>
+    <string name="scheduled_delete_message">이 예약 게시글이 영구적으로 삭제됩니다.</string>
+
+    <!-- Edit Post -->
+    <string name="edit_post_title">게시글 수정</string>
+    <string name="edit_content_label">내용</string>
+    <string name="edit_cw_label">콘텐츠 경고 (선택사항)</string>
+    <string name="edit_cw_placeholder">민감한 콘텐츠 경고</string>
+    <string name="edit_add_image">이미지 추가</string>
+    <string name="edit_images">이미지</string>
+    <string name="edit_post_image">게시글 이미지</string>
+    <string name="edit_uploading_image">이미지 업로드 중...</string>
+
+    <!-- Replies -->
+    <string name="replies_load_more">더 보기</string>
+    <string name="replies_write_placeholder">답글을 작성하세요...</string>
+
+    <!-- Group Chat -->
+    <string name="group_chat_members">멤버</string>
+    <string name="group_chat_no_members">멤버가 없습니다</string>
+
+    <!-- Messages extras -->
+    <string name="messages_new">새 메시지</string>
+    <string name="messages_search_members">멤버 검색</string>
+    <string name="messages_no_members_found">멤버를 찾을 수 없습니다</string>
+
+    <!-- Reaction Picker -->
+    <string name="reaction_picker_cancel">취소</string>
+    <string name="reaction_picker_title">반응 선택</string>
+
+    <!-- Error Messages -->
+    <string name="error_upload_image">이미지 업로드 실패</string>
+    <string name="error_process_image">이미지 처리 실패</string>
+    <string name="error_unknown">알 수 없는 오류</string>
+    <string name="error_generic">오류: %1$s</string>
+
+    <!-- Boards -->
+    <string name="boards_no_boards">사용 가능한 게시판이 없습니다</string>
+    <string name="board_reply">답글</string>
+    <string name="board_replying_to">@%1$s님에게 답글</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_user_avatar">사용자 아바타</string>
+    <string name="cd_delete_post">게시글 삭제</string>
+    <string name="cd_post_image">게시글 이미지</string>
+    <string name="cd_cancel_reply">답글 취소</string>
+    <string name="cd_delete_comment">댓글 삭제</string>
+    <string name="cd_community_banner">커뮤니티 배너</string>
+    <string name="cd_more_options">더보기</string>
+
+    <!-- Post Delete -->
+    <string name="post_delete_confirm_title">게시글 삭제</string>
+    <string name="post_delete_confirm_message">이 게시글을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</string>
+
+    <!-- Mode Switch -->
+    <string name="switch_to_console">콘솔 모드로 전환</string>
+    <string name="switch_to_app">앱 모드로 전환</string>
+
+    <!-- Profile Switcher -->
+    <string name="profile_switch_title">프로필 전환</string>
+    <string name="profile_create">프로필 만들기</string>
+
+    <!-- Console -->
+    <string name="console_communities_title">커뮤니티</string>
+    <string name="console_no_communities">커뮤니티 없음</string>
+    <string name="console_join_message">커뮤니티에 가입하여 시작하세요</string>
+    <string name="console_selected">선택됨</string>
+
+    <!-- Composer -->
+    <string name="composer_next">다음</string>
+
+    <!-- Home Feed extras -->
+    <string name="home_select_community_hint">커뮤니티를 선택하려면 콘솔 모드로 전환하세요</string>
+
+    <!-- Markdown Help -->
+    <string name="markdown_text_formatting">텍스트 서식</string>
+    <string name="markdown_bold">굵은 글씨</string>
+    <string name="markdown_italic">기울임꼴</string>
+    <string name="markdown_strikethrough">취소선</string>
+    <string name="markdown_inline_code">인라인 코드</string>
+    <string name="markdown_headings">제목</string>
+    <string name="markdown_links">링크</string>
+    <string name="markdown_links_description">클릭 가능한 링크 만들기</string>
+    <string name="markdown_links_auto">URL은 자동으로 링크로 변환됩니다</string>
+    <string name="markdown_images">이미지</string>
+    <string name="markdown_images_description">이미지 삽입</string>
+    <string name="markdown_images_hint">이미지 업로드 버튼을 사용할 수도 있습니다</string>
+    <string name="markdown_lists">목록</string>
+    <string name="markdown_unordered">순서 없는 목록:</string>
+    <string name="markdown_ordered">순서 있는 목록:</string>
+    <string name="markdown_blockquotes">인용</string>
+    <string name="markdown_code_blocks">코드 블록</string>
+    <string name="markdown_line_breaks">줄 바꿈</string>
+    <string name="markdown_line_breaks_hint">새 문단을 만들려면 텍스트 사이에 빈 줄을 남기세요:</string>
+</resources>

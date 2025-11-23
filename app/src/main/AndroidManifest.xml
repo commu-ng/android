@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:name=".CommungApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Commung">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Commung">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".service.CommungMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+    
+    <!-- Required: set your sentry.io project identifier (DSN) -->
+    <meta-data android:name="io.sentry.dsn" android:value="https://e86b5b353c2fc20b93030c349878b880@o4504757655764992.ingest.us.sentry.io/4510413325664256" />
+    <!-- Add data like request headers, user ip address and device name, see https://docs.sentry.io/platforms/android/data-management/data-collected/ for more info -->
+    <meta-data android:name="io.sentry.send-default-pii" android:value="true" />
+
+    <!-- enable automatic breadcrumbs for user interactions (clicks, swipes, scrolls) -->
+    <meta-data android:name="io.sentry.traces.user-interaction.enable" android:value="true" />
+    <!-- enable screenshot for crashes (could contain sensitive/PII data) -->
+    <meta-data android:name="io.sentry.attach-screenshot" android:value="true" />
+    <!-- enable view hierarchy for crashes -->
+    <meta-data android:name="io.sentry.attach-view-hierarchy" android:value="true" />
+
+    <!-- enable the performance API by setting a sample-rate, adjust in production env -->
+    <meta-data android:name="io.sentry.traces.sample-rate" android:value="1.0" />
+    <!-- enable Sentry Logs -->
+    <meta-data android:name="io.sentry.logs.enabled" android:value="true" />
+</application>
+
+</manifest>

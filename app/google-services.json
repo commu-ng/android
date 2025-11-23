@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "727155173342",
+    "project_id": "commu-ng",
+    "storage_bucket": "commu-ng.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727155173342:android:94bc5c96a43c5e4df91f4f",
+        "android_client_info": {
+          "package_name": "ng.commu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3AXCybTci9IBq5aBf0XMjt8EiWvF_Dnk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
