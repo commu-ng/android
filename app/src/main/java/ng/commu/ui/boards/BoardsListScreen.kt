@@ -35,8 +35,8 @@ fun BoardsListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = if (isAuthenticated) {
-                    {
+                navigationIcon = {
+                    if (isAuthenticated) {
                         IconButton(onClick = onSwitchToApp) {
                             Icon(
                                 imageVector = Icons.Filled.Home,
@@ -44,8 +44,6 @@ fun BoardsListScreen(
                             )
                         }
                     }
-                } else {
-                    null
                 },
                 title = { Text(stringResource(R.string.nav_boards)) }
             )

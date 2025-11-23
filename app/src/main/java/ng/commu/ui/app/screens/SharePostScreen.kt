@@ -23,6 +23,7 @@ import coil.compose.AsyncImage
 import ng.commu.R
 import ng.commu.data.model.CommunityPost
 import ng.commu.data.model.Conversation
+import ng.commu.ui.components.MarkdownText
 import ng.commu.viewmodel.SharePostViewModel
 import ng.commu.viewmodel.ProfileContextViewModel
 
@@ -108,12 +109,9 @@ fun SharePostSheet(
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = post.content,
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    MarkdownText(
+                        markdown = post.content,
+                        maxLines = 3
                     )
                 }
             }

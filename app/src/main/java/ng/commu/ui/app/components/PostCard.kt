@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ng.commu.R
 import ng.commu.data.model.CommunityPost
+import ng.commu.ui.components.MarkdownText
 import ng.commu.utils.DateUtils
 
 @Composable
@@ -270,9 +271,8 @@ fun PostCard(
 
             // Content - hide if content warning exists and not revealed
             if (post.contentWarning == null || showSensitiveContent) {
-                Text(
-                    text = post.content,
-                    style = MaterialTheme.typography.bodyMedium
+                MarkdownText(
+                    markdown = post.content
                 )
 
                 // Images

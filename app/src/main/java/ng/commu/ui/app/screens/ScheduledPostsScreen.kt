@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ng.commu.R
 import ng.commu.data.model.CommunityPost
+import ng.commu.ui.components.MarkdownText
 import ng.commu.viewmodel.ProfileContextViewModel
 import ng.commu.viewmodel.ScheduledPostsViewModel
 import java.time.ZonedDateTime
@@ -189,11 +190,9 @@ private fun ScheduledPostCard(
             }
 
             // Content preview
-            Text(
-                text = post.content,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 4,
-                overflow = TextOverflow.Ellipsis
+            MarkdownText(
+                markdown = post.content,
+                maxLines = 4
             )
 
             // Images indicator

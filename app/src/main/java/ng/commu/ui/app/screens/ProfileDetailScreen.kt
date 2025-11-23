@@ -32,6 +32,7 @@ import coil.compose.AsyncImage
 import ng.commu.R
 import ng.commu.data.model.CommunityPost
 import ng.commu.data.model.Profile
+import ng.commu.ui.components.MarkdownText
 import ng.commu.utils.DateUtils
 import ng.commu.viewmodel.ProfileContextViewModel
 import ng.commu.viewmodel.ProfileDetailViewModel
@@ -386,11 +387,9 @@ private fun ProfilePostCard(
             }
 
             // Content
-            Text(
-                text = post.content,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 4,
-                overflow = TextOverflow.Ellipsis
+            MarkdownText(
+                markdown = post.content,
+                maxLines = 4
             )
 
             // Images preview

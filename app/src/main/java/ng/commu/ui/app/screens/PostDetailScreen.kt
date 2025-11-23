@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ng.commu.R
 import ng.commu.data.model.CommunityPost
 import ng.commu.ui.app.components.PostCard
+import ng.commu.ui.components.MarkdownText
 import ng.commu.viewmodel.PostDetailViewModel
 import ng.commu.viewmodel.ProfileContextViewModel
 
@@ -260,10 +261,8 @@ private fun ParentPostCard(
                 }
             }
 
-            Text(
-                text = post.content,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+            MarkdownText(
+                markdown = post.content
             )
         }
     }

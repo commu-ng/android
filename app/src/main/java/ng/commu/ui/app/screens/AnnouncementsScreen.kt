@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import ng.commu.R
 import ng.commu.data.model.CommunityPost
+import ng.commu.ui.components.MarkdownText
 import ng.commu.utils.DateUtils
 import ng.commu.viewmodel.AnnouncementsViewModel
 import ng.commu.viewmodel.ProfileContextViewModel
@@ -230,11 +231,9 @@ private fun AnnouncementCard(
             }
 
             // Content
-            Text(
-                text = announcement.content,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 4,
-                overflow = TextOverflow.Ellipsis
+            MarkdownText(
+                markdown = announcement.content,
+                maxLines = 4
             )
 
             // Images preview
