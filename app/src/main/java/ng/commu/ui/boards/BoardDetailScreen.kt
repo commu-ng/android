@@ -33,7 +33,7 @@ import ng.commu.viewmodel.PostsUiState
 import androidx.compose.foundation.background
 import androidx.compose.ui.res.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun BoardDetailScreen(
     board: Board,
@@ -337,6 +337,7 @@ fun BoardDetailScreen(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PostItem(
     post: Post,
