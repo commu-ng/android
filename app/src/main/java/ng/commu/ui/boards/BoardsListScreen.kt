@@ -23,6 +23,7 @@ import ng.commu.viewmodel.BoardsViewModel
 fun BoardsListScreen(
     onBoardClick: (Board) -> Unit,
     onSwitchToApp: () -> Unit = {},
+    isAuthenticated: Boolean = false,
     viewModel: BoardsViewModel = hiltViewModel()
 ) {
     val boardsState by viewModel.boardsState.collectAsState()
@@ -34,13 +35,17 @@ fun BoardsListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onSwitchToApp) {
-                        Icon(
-                            imageVector = Icons.Filled.Home,
-                            contentDescription = stringResource(R.string.nav_home)
-                        )
+                navigationIcon = if (isAuthenticated) {
+                    {
+                        IconButton(onClick = onSwitchToApp) {
+                            Icon(
+                                imageVector = Icons.Filled.Home,
+                                contentDescription = stringResource(R.string.nav_home)
+                            )
+                        }
                     }
+                } else {
+                    null
                 },
                 title = { Text(stringResource(R.string.nav_boards)) }
             )

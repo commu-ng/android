@@ -297,6 +297,21 @@ fun MainScreen(
                         }
                     }
                 } else {
+                    // Boards
+                    NavigationBarItem(
+                        icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) },
+                        label = { Text(stringResource(R.string.nav_boards_kr)) },
+                        selected = currentRoute == Screen.Boards.route,
+                        onClick = {
+                            navController.navigate(Screen.Boards.route) {
+                                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+
+                    // Sign In
                     NavigationBarItem(
                         icon = { Icon(Icons.Filled.AccountCircle, contentDescription = null) },
                         label = { Text(stringResource(R.string.auth_sign_in)) },
@@ -315,7 +330,7 @@ fun MainScreen(
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = if (isAuthenticated) Screen.HomeFeed.route else Screen.Login.route,
+            startDestination = if (isAuthenticated) Screen.HomeFeed.route else Screen.Boards.route,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Screen.Login.route) {
@@ -363,6 +378,7 @@ fun MainScreen(
                             restoreState = true
                         }
                     },
+                    isAuthenticated = isAuthenticated,
                     viewModel = boardsViewModel
                 )
             }
