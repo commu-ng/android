@@ -137,6 +137,37 @@ interface ApiService {
     @GET("/console/communities/mine")
     suspend fun getUserCommunities(): Response<CommunitiesListResponse>
 
+    @GET("/console/communities/recruiting")
+    suspend fun getRecruitingCommunities(): Response<CommunitiesListResponse>
+
+    @GET("/console/communities/ongoing")
+    suspend fun getOngoingCommunities(): Response<CommunitiesListResponse>
+
+    @GET("/console/communities/{slug}")
+    suspend fun getCommunityDetails(@Path("slug") slug: String): Response<CommunityDetailsResponse>
+
+    @GET("/console/communities/{slug}/links")
+    suspend fun getCommunityLinks(@Path("slug") slug: String): Response<CommunityLinksResponse>
+
+    @POST("/console/communities/{slug}/apply")
+    suspend fun applyToCommunity(
+        @Path("slug") slug: String,
+        @Body request: ApplyToCommunityRequest
+    ): Response<CommunityApplicationResponse>
+
+    @GET("/console/communities/{slug}/my-applications")
+    suspend fun getMyApplications(@Path("slug") slug: String): Response<CommunityApplicationsResponse>
+
+    @GET("/console/communities/{slug}/applications")
+    suspend fun getCommunityApplications(@Path("slug") slug: String): Response<CommunityApplicationsDetailResponse>
+
+    @PUT("/console/communities/{slug}/applications/{applicationId}/review")
+    suspend fun reviewApplication(
+        @Path("slug") slug: String,
+        @Path("applicationId") applicationId: String,
+        @Body request: ApplicationReviewRequest
+    ): Response<ApplicationReviewResponseWrapper>
+
     // MARK: - App Endpoints (Community-scoped)
 
     // Posts

@@ -61,6 +61,9 @@ import ng.commu.viewmodel.ProfileContextViewModel
 import androidx.compose.runtime.LaunchedEffect
 import ng.commu.ui.app.screens.AppProfileScreen
 import ng.commu.ui.console.screens.ConsoleCommunityScreen
+import ng.commu.ui.console.screens.CommunityDetailScreen
+import ng.commu.ui.console.screens.CommunityApplicationScreen
+import ng.commu.ui.console.screens.ApplicationsScreen
 import ng.commu.ui.console.screens.AccountSettingsScreen
 
 @Composable
@@ -267,7 +270,7 @@ fun MainScreen(
                                 }
                             )
 
-                            // Communities
+                            // Communities (merged browse + my communities)
                             NavigationBarItem(
                                 icon = { Icon(Icons.Filled.Person, contentDescription = null) },
                                 label = { Text(stringResource(R.string.nav_communities_kr)) },
@@ -678,7 +681,67 @@ fun MainScreen(
                             launchSingleTop = true
                             restoreState = true
                         }
+                    },
+                    onCommunityClick = { slug ->
+                        navController.navigate(Screen.CommunityDetail.createRoute(slug))
+                    },
+                    onApplicationsClick = { slug ->
+                        navController.navigate(Screen.CommunityApplications.createRoute(slug))
                     }
+                )
+            }
+
+            composable(
+                route = Screen.CommunityDetail.route,
+                arguments = listOf(navArgument("slug") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val slug = backStackEntry.arguments?.getString("slug") ?: return@composable
+                CommunityDetailScreen(
+                    slug = slug,
+                    onNavigateBack = { navController.popBackStack() },
+                    onSwitchToApp = { community ->
+                        communityContextViewModel.switchCommunity(community)
+                        appModeViewModel.switchMode(AppMode.APP)
+                        navController.navigate(Screen.HomeFeed.route) {
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    onApply = { communitySlug, communityName ->
+                        navController.navigate(Screen.CommunityApplication.createRoute(communitySlug, communityName))
+                    },
+                    communityContextViewModel = communityContextViewModel
+                )
+            }
+
+            composable(
+                route = Screen.CommunityApplication.route,
+                arguments = listOf(
+                    navArgument("slug") { type = NavType.StringType },
+                    navArgument("name") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val slug = backStackEntry.arguments?.getString("slug") ?: return@composable
+                val name = java.net.URLDecoder.decode(
+                    backStackEntry.arguments?.getString("name") ?: "",
+                    "UTF-8"
+                )
+                CommunityApplicationScreen(
+                    slug = slug,
+                    communityName = name,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = Screen.CommunityApplications.route,
+                arguments = listOf(navArgument("slug") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val slug = backStackEntry.arguments?.getString("slug") ?: return@composable
+                ApplicationsScreen(
+                    communitySlug = slug,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 

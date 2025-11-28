@@ -68,15 +68,17 @@ fun CommunityCard(
                     )
 
                     // Role badge
-                    Text(
-                        text = community.role.replaceFirstChar { it.uppercase() },
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(getRoleBadgeColor(community.role))
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                    )
+                    community.role?.let { role ->
+                        Text(
+                            text = role.replaceFirstChar { it.uppercase() },
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(4.dp))
+                                .background(getRoleBadgeColor(role))
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
                 }
 
                 // Hashtags

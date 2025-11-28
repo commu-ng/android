@@ -42,5 +42,15 @@ sealed class Screen(val route: String) {
         fun createRoute(username: String) = "profile_detail/$username"
     }
     object ConsoleCommunities : Screen("console_communities")
+    object BrowseCommunities : Screen("browse_communities")
+    object CommunityDetail : Screen("community_detail/{slug}") {
+        fun createRoute(slug: String) = "community_detail/$slug"
+    }
+    object CommunityApplication : Screen("community_application/{slug}/{name}") {
+        fun createRoute(slug: String, name: String) = "community_application/$slug/${java.net.URLEncoder.encode(name, "UTF-8")}"
+    }
+    object CommunityApplications : Screen("community_applications/{slug}") {
+        fun createRoute(slug: String) = "community_applications/$slug"
+    }
     object AccountSettings : Screen("account_settings")
 }

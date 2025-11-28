@@ -142,6 +142,7 @@
     <!-- Communities -->
     <string name="communities_title">Communities</string>
     <string name="communities_my_communities">My Communities</string>
+    <string name="communities_my_communities_description">Communities you\'ve joined</string>
     <string name="communities_pending">%d pending</string>
     <string name="communities_no_communities">No Communities</string>
     <string name="communities_join_message">Join a community to get started</string>
@@ -389,6 +390,61 @@
     <string name="console_no_communities">No Communities</string>
     <string name="console_join_message">Join a community to get started</string>
     <string name="console_selected">Selected</string>
+
+    <!-- Browse Communities -->
+    <string name="browse_title">Browse</string>
+    <string name="browse_recruiting">Recruiting</string>
+    <string name="browse_recruiting_description">Communities currently recruiting new members</string>
+    <string name="browse_ongoing">Ongoing</string>
+    <string name="browse_ongoing_description">Active communities not currently recruiting</string>
+    <string name="browse_no_communities">No Communities</string>
+    <string name="browse_no_communities_message">No communities are currently available</string>
+
+    <!-- Community Detail -->
+    <string name="community_description">Description</string>
+    <string name="community_links">Links</string>
+    <string name="community_apply">Apply to Join</string>
+    <string name="community_visit">Visit Community</string>
+
+    <!-- Community Application -->
+    <string name="application_title">Apply to Join</string>
+    <string name="application_my_applications">My Applications</string>
+    <string name="application_rejection_reason">Rejection reason: %1$s</string>
+    <string name="application_reapply">Apply Again</string>
+    <string name="application_form_title">Application Form</string>
+    <string name="application_form_description">Fill out the form to apply. Your application will be reviewed by the community moderators.</string>
+    <string name="application_profile_name">Profile Name</string>
+    <string name="application_profile_name_placeholder">Enter your display name</string>
+    <string name="application_profile_name_hint">This name will be displayed in the community</string>
+    <string name="application_profile_username">Profile ID</string>
+    <string name="application_profile_username_placeholder">username (letters, numbers, underscore only)</string>
+    <string name="application_message">Message (Optional)</string>
+    <string name="application_message_placeholder">Introduce yourself or explain why you want to join</string>
+    <string name="application_submitting">Submitting...</string>
+    <string name="application_submit">Submit Application</string>
+    <string name="application_success_title">Application Submitted!</string>
+    <string name="application_success_message">Your application has been submitted. You will be notified when it is reviewed.</string>
+    <string name="application_status_pending">Pending</string>
+    <string name="application_status_approved">Approved</string>
+    <string name="application_status_rejected">Rejected</string>
+
+    <!-- Applications Management -->
+    <string name="applications_title">Applications</string>
+    <string name="applications_empty">No Applications</string>
+    <string name="applications_empty_description">There are no applications for this community yet.</string>
+    <string name="applications_pending">Pending</string>
+    <string name="applications_reviewed">Reviewed</string>
+    <string name="applications_applied_on">Applied on</string>
+    <string name="applications_reviewed_on">Reviewed on</string>
+    <string name="applications_message">Message</string>
+    <string name="applications_rejection_reason_label">Rejection Reason</string>
+    <string name="applications_detail_title">Application</string>
+    <string name="applications_approve">Approve</string>
+    <string name="applications_approving">Approving...</string>
+    <string name="applications_reject">Reject</string>
+    <string name="applications_reject_title">Reject Application</string>
+    <string name="applications_reject_message">Optionally provide a reason for rejection.</string>
+    <string name="applications_rejection_reason_placeholder">Reason (optional)</string>
 
     <!-- Composer -->
     <string name="composer_next">Next</string>
