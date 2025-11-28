@@ -82,7 +82,7 @@ class CommunityDetailViewModel @Inject constructor(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun CommunityDetailScreen(
     slug: String,
