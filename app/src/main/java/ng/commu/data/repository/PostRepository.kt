@@ -68,6 +68,12 @@ class PostRepository @Inject constructor(
         profileId: String
     ) = apiService.deleteCommunityPost(postId, profileId)
 
+    suspend fun reportPost(
+        postId: String,
+        profileId: String,
+        reason: String
+    ) = apiService.reportPost(postId, ReportPostRequest(reason, profileId))
+
     suspend fun searchPosts(
         query: String,
         profileId: String,

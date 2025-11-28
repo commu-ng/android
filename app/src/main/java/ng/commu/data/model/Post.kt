@@ -161,6 +161,13 @@ data class ReactionCreateResponse(
     val emoji: String
 )
 
+// MARK: - Report Post
+
+data class ReportPostRequest(
+    val reason: String,
+    @Json(name = "profile_id") val profileId: String
+)
+
 // MARK: - Export Job
 
 data class ExportJob(

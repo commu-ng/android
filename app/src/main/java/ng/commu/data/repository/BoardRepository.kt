@@ -209,4 +209,22 @@ class BoardRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
+    suspend fun reportPost(
+        boardSlug: String,
+        postId: String,
+        reason: String
+    ): Result<Unit> {
+        return try {
+            val request = ReportBoardPostRequest(reason = reason)
+            val response = apiService.reportBoardPost(boardSlug, postId, request)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Failed to report post: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

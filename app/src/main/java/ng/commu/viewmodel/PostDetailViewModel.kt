@@ -264,4 +264,20 @@ class PostDetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun reportPost(postId: String, profileId: String, reason: String) {
+        viewModelScope.launch {
+            try {
+                Log.d(TAG, "Reporting post $postId")
+                val response = postRepository.reportPost(postId, profileId, reason)
+                if (response.isSuccessful) {
+                    Log.d(TAG, "Post reported successfully")
+                } else {
+                    Log.e(TAG, "Failed to report post: ${response.code()} - ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to report post", e)
+            }
+        }
+    }
 }

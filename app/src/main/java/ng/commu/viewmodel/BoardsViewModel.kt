@@ -379,4 +379,22 @@ class BoardsViewModel @Inject constructor(
                 }
         }
     }
+
+    fun reportPost(
+        boardSlug: String,
+        postId: String,
+        reason: String,
+        onSuccess: () -> Unit = {},
+        onError: (String) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            boardRepository.reportPost(boardSlug, postId, reason)
+                .onSuccess {
+                    onSuccess()
+                }
+                .onFailure { error ->
+                    onError(error.message ?: "Failed to report post")
+                }
+        }
+    }
 }

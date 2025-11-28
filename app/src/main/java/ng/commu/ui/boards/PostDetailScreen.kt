@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
@@ -223,9 +224,12 @@ fun PostContent(
 ) {
 	var showImageDialog by remember { mutableStateOf(false) }
 	var showDeleteDialog by remember { mutableStateOf(false) }
+	var showReportDialog by remember { mutableStateOf(false) }
+	var reportReason by remember { mutableStateOf("") }
 	val context = LocalContext.current
 	val markwon = remember { Markwon.create(context) }
 	val isAuthor = currentUserId != null && currentUserId == post.author.id
+	val isLoggedIn = currentUserId != null
 
 	Column(
 		verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -261,6 +265,17 @@ fun PostContent(
 					style = MaterialTheme.typography.bodySmall,
 					color = MaterialTheme.colorScheme.onSurfaceVariant
 				)
+			}
+
+			// Report button (for non-author logged in users)
+			if (!isAuthor && isLoggedIn) {
+				IconButton(onClick = { showReportDialog = true }) {
+					Icon(
+						Icons.Default.Flag,
+						contentDescription = "Report post",
+						tint = MaterialTheme.colorScheme.error
+					)
+				}
 			}
 
 			// Delete button (only for author)
@@ -336,6 +351,71 @@ fun PostContent(
 			},
 			dismissButton = {
 				TextButton(onClick = { showDeleteDialog = false }) {
+					Text(stringResource(R.string.action_cancel))
+				}
+			}
+		)
+	}
+
+	// Report dialog
+	if (showReportDialog) {
+		AlertDialog(
+			onDismissRequest = {
+				showReportDialog = false
+				reportReason = ""
+			},
+			title = { Text(stringResource(R.string.report_title)) },
+			text = {
+				Column {
+					Text(
+						text = stringResource(R.string.report_description),
+						style = MaterialTheme.typography.bodySmall,
+						color = MaterialTheme.colorScheme.onSurfaceVariant
+					)
+					Spacer(modifier = Modifier.height(12.dp))
+					OutlinedTextField(
+						value = reportReason,
+						onValueChange = { if (it.length <= 2000) reportReason = it },
+						modifier = Modifier.fillMaxWidth(),
+						minLines = 4,
+						maxLines = 6,
+						placeholder = { Text(stringResource(R.string.report_placeholder)) }
+					)
+					Spacer(modifier = Modifier.height(4.dp))
+					Text(
+						text = "${reportReason.length}/2000",
+						style = MaterialTheme.typography.labelSmall,
+						color = MaterialTheme.colorScheme.onSurfaceVariant,
+						modifier = Modifier.align(Alignment.End)
+					)
+				}
+			},
+			confirmButton = {
+				TextButton(
+					onClick = {
+						if (reportReason.isNotBlank()) {
+							viewModel.reportPost(
+								boardSlug = boardSlug,
+								postId = post.id,
+								reason = reportReason.trim(),
+								onSuccess = {
+									showReportDialog = false
+									reportReason = ""
+								},
+								onError = { /* Handle error */ }
+							)
+						}
+					},
+					enabled = reportReason.isNotBlank()
+				) {
+					Text(stringResource(R.string.action_submit), color = MaterialTheme.colorScheme.error)
+				}
+			},
+			dismissButton = {
+				TextButton(onClick = {
+					showReportDialog = false
+					reportReason = ""
+				}) {
 					Text(stringResource(R.string.action_cancel))
 				}
 			}

@@ -79,6 +79,13 @@
     <string name="action_post">게시</string>
     <string name="action_posting">게시 중...</string>
     <string name="action_reply">답글</string>
+    <string name="action_report">신고</string>
+    <string name="action_submit">제출</string>
+
+    <!-- Report -->
+    <string name="report_title">게시물 신고</string>
+    <string name="report_description">이 게시물을 신고하는 이유를 입력해주세요.</string>
+    <string name="report_placeholder">신고 사유를 자세히 작성해주세요...</string>
 
     <!-- Hashtags -->
     <string name="hashtag_popular">인기:</string>

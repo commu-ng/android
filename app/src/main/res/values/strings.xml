@@ -78,6 +78,13 @@
     <string name="action_post">Post</string>
     <string name="action_posting">Posting...</string>
     <string name="action_reply">Reply</string>
+    <string name="action_report">Report</string>
+    <string name="action_submit">Submit</string>
+
+    <!-- Report -->
+    <string name="report_title">Report Post</string>
+    <string name="report_description">Please describe why you are reporting this post.</string>
+    <string name="report_placeholder">Enter report reason...</string>
 
     <!-- Hashtags -->
     <string name="hashtag_popular">Popular:</string>

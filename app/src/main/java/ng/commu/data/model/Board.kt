@@ -156,3 +156,7 @@ data class CreateReplyRequest(
 data class UpdateReplyRequest(
     val content: String
 )
+
+data class ReportBoardPostRequest(
+    val reason: String
+)

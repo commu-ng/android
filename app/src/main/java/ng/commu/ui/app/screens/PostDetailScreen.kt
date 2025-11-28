@@ -145,6 +145,11 @@ fun PostDetailScreen(
                                         onBackClick()
                                     }
                                 },
+                                onReportClick = { reason ->
+                                    currentProfile?.id?.let { profileId ->
+                                        postDetailViewModel.reportPost(postId, profileId, reason)
+                                    }
+                                },
                                 isDetail = true,
                                 modifier = Modifier.padding(16.dp)
                             )

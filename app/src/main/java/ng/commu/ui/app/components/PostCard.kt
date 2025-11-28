@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddReaction
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
@@ -42,12 +43,15 @@ fun PostCard(
     onBookmarkClick: () -> Unit,
     onProfileClick: (String) -> Unit = {},
     onDeleteClick: (() -> Unit)? = null,
+    onReportClick: ((String) -> Unit)? = null,
     modifier: Modifier = Modifier,
     isDetail: Boolean = false
 ) {
     var showReactionPicker by remember { mutableStateOf(false) }
     var showSensitiveContent by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showReportDialog by remember { mutableStateOf(false) }
+    var reportReason by remember { mutableStateOf("") }
     var showMoreMenu by remember { mutableStateOf(false) }
 
     val isOwnPost = currentProfileId != null && post.author.id == currentProfileId
@@ -88,6 +92,68 @@ fun PostCard(
             }
         )
     }
+
+    // Show report dialog
+    if (showReportDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showReportDialog = false
+                reportReason = ""
+            },
+            title = { Text(stringResource(R.string.report_title)) },
+            text = {
+                Column {
+                    Text(
+                        text = stringResource(R.string.report_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    OutlinedTextField(
+                        value = reportReason,
+                        onValueChange = { if (it.length <= 2000) reportReason = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        minLines = 4,
+                        maxLines = 6,
+                        placeholder = { Text(stringResource(R.string.report_placeholder)) }
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "${reportReason.length}/2000",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.align(Alignment.End)
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (reportReason.isNotBlank()) {
+                            onReportClick?.invoke(reportReason.trim())
+                            showReportDialog = false
+                            reportReason = ""
+                        }
+                    },
+                    enabled = reportReason.isNotBlank(),
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text(stringResource(R.string.action_submit))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showReportDialog = false
+                    reportReason = ""
+                }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            }
+        )
+    }
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -196,8 +262,8 @@ fun PostCard(
                         )
                     }
 
-                    // More menu for own posts
-                    if (isOwnPost && onDeleteClick != null) {
+                    // More menu for all authenticated users
+                    if (currentProfileId != null && ((isOwnPost && onDeleteClick != null) || (!isOwnPost && onReportClick != null))) {
                         Box {
                             IconButton(
                                 onClick = { showMoreMenu = true },
@@ -215,23 +281,41 @@ fun PostCard(
                                 expanded = showMoreMenu,
                                 onDismissRequest = { showMoreMenu = false }
                             ) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.action_delete)) },
-                                    onClick = {
-                                        showMoreMenu = false
-                                        showDeleteDialog = true
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Default.Delete,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.error
+                                if (isOwnPost && onDeleteClick != null) {
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.action_delete)) },
+                                        onClick = {
+                                            showMoreMenu = false
+                                            showDeleteDialog = true
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                Icons.Default.Delete,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.error
+                                            )
+                                        },
+                                        colors = MenuDefaults.itemColors(
+                                            textColor = MaterialTheme.colorScheme.error
                                         )
-                                    },
-                                    colors = MenuDefaults.itemColors(
-                                        textColor = MaterialTheme.colorScheme.error
                                     )
-                                )
+                                }
+                                if (!isOwnPost && onReportClick != null) {
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.action_report)) },
+                                        onClick = {
+                                            showMoreMenu = false
+                                            showReportDialog = true
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                Icons.Default.Flag,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.error
+                                            )
+                                        }
+                                    )
+                                }
                             }
                         }
                     }

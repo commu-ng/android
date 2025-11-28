@@ -98,6 +98,13 @@ interface ApiService {
         @Path("replyId") replyId: String
     ): Response<Unit>
 
+    @POST("/console/board/{boardSlug}/posts/{postId}/report")
+    suspend fun reportBoardPost(
+        @Path("boardSlug") boardSlug: String,
+        @Path("postId") postId: String,
+        @Body request: ReportBoardPostRequest
+    ): Response<Unit>
+
     @POST("/console/devices")
     suspend fun registerDevice(@Body request: RegisterDeviceRequest): Response<DeviceResponse>
 
@@ -224,6 +231,13 @@ interface ApiService {
     suspend fun unpinPost(
         @Path("postId") postId: String,
         @Query("profile_id") profileId: String
+    ): Response<Unit>
+
+    // Report
+    @POST("/app/posts/{postId}/report")
+    suspend fun reportPost(
+        @Path("postId") postId: String,
+        @Body request: ReportPostRequest
     ): Response<Unit>
 
     // Messages - Direct Messages
