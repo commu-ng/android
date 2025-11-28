@@ -18,6 +18,12 @@
     <string name="auth_no_account">계정이 없으신가요?</string>
     <string name="auth_password_min_length">비밀번호는 최소 8자 이상이어야 합니다</string>
     <string name="auth_passwords_not_match">비밀번호가 일치하지 않습니다</string>
+    <string name="auth_policy_agreement_prefix"></string>
+    <string name="auth_privacy_policy">개인정보 처리방침</string>
+    <string name="auth_and">및</string>
+    <string name="auth_community_guidelines">커뮤니티 가이드라인</string>
+    <string name="auth_policy_agreement_suffix">에 동의합니다</string>
+    <string name="auth_policy_agreement_required">개인정보 처리방침 및 커뮤니티 가이드라인에 동의해주세요</string>
 
     <!-- Navigation -->
     <string name="nav_boards">게시판</string>

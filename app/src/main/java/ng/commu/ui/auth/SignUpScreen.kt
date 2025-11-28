@@ -2,13 +2,20 @@ package ng.commu.ui.auth
 
 import android.Manifest
 import android.os.Build
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -28,10 +35,13 @@ fun SignUpScreen(
     var loginName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    var policyAgreed by remember { mutableStateOf(false) }
     var validationError by remember { mutableStateOf<String?>(null) }
 
+    val context = LocalContext.current
     val passwordMinLengthError = stringResource(R.string.auth_password_min_length)
     val passwordsNotMatchError = stringResource(R.string.auth_passwords_not_match)
+    val policyAgreementRequiredError = stringResource(R.string.auth_policy_agreement_required)
 
     // Request notification permission on Android 13+
     val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -103,6 +113,50 @@ fun SignUpScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = policyAgreed,
+                onCheckedChange = { policyAgreed = it },
+                modifier = Modifier.padding(0.dp)
+            )
+            val annotatedString = buildAnnotatedString {
+                append(stringResource(R.string.auth_policy_agreement_prefix))
+                pushStringAnnotation(tag = "privacy", annotation = "https://commu.ng/privacy")
+                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                    append(stringResource(R.string.auth_privacy_policy))
+                }
+                pop()
+                append(" ${stringResource(R.string.auth_and)} ")
+                pushStringAnnotation(tag = "guidelines", annotation = "https://commu.ng/policy")
+                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                    append(stringResource(R.string.auth_community_guidelines))
+                }
+                pop()
+                append(stringResource(R.string.auth_policy_agreement_suffix))
+            }
+            Text(
+                text = annotatedString,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        annotatedString.getStringAnnotations(tag = "privacy", start = 0, end = annotatedString.length)
+                            .firstOrNull()?.let { annotation ->
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item)))
+                            }
+                        annotatedString.getStringAnnotations(tag = "guidelines", start = 0, end = annotatedString.length)
+                            .firstOrNull()?.let { annotation ->
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item)))
+                            }
+                    }
+            )
+        }
+
         if (validationError != null) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -127,6 +181,11 @@ fun SignUpScreen(
             onClick = {
                 validationError = null
 
+                if (!policyAgreed) {
+                    validationError = policyAgreementRequiredError
+                    return@Button
+                }
+
                 if (password.length < 8) {
                     validationError = passwordMinLengthError
                     return@Button
@@ -139,7 +198,7 @@ fun SignUpScreen(
 
                 authViewModel.signup(loginName, password)
             },
-            enabled = authState !is AuthState.Loading && loginName.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty(),
+            enabled = authState !is AuthState.Loading && loginName.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty() && policyAgreed,
             modifier = Modifier.fillMaxWidth()
         ) {
             if (authState is AuthState.Loading) {

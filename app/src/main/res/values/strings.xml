@@ -17,6 +17,12 @@
     <string name="auth_no_account">Don\'t have an account?</string>
     <string name="auth_password_min_length">Password must be at least 8 characters</string>
     <string name="auth_passwords_not_match">Passwords do not match</string>
+    <string name="auth_policy_agreement_prefix">I agree to the </string>
+    <string name="auth_privacy_policy">Privacy Policy</string>
+    <string name="auth_and">and</string>
+    <string name="auth_community_guidelines">Community Guidelines</string>
+    <string name="auth_policy_agreement_suffix"></string>
+    <string name="auth_policy_agreement_required">Please agree to the Privacy Policy and Community Guidelines</string>
 
     <!-- Navigation -->
     <string name="nav_boards">Boards</string>
