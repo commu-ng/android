@@ -115,7 +115,7 @@ fun CreatePostScreen(
                     }
 
                     // Create multipart body
-                    val requestBody = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
+                    val requestBody = tempFile.asRequestBody("application/octet-stream".toMediaTypeOrNull())
                     val filePart = MultipartBody.Part.createFormData(
                         "file",
                         tempFile.name,

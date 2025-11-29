@@ -137,7 +137,7 @@ class PostRepository @Inject constructor(
         MultipartBody.Part.createFormData(
             "file",
             file.name,
-            file.asRequestBody("image/*".toMediaTypeOrNull())
+            file.asRequestBody("application/octet-stream".toMediaTypeOrNull())
         )
     )
 
@@ -145,7 +145,7 @@ class PostRepository @Inject constructor(
         MultipartBody.Part.createFormData(
             "file",
             filename,
-            imageData.toRequestBody("image/*".toMediaTypeOrNull())
+            imageData.toRequestBody("application/octet-stream".toMediaTypeOrNull())
         )
     )
 }
