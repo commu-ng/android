@@ -25,6 +25,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.noties.markwon.Markwon
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import ng.commu.R
 import ng.commu.data.model.BoardPostReply
 import ng.commu.data.model.Post
@@ -227,7 +228,11 @@ fun PostContent(
 	var showReportDialog by remember { mutableStateOf(false) }
 	var reportReason by remember { mutableStateOf("") }
 	val context = LocalContext.current
-	val markwon = remember { Markwon.create(context) }
+	val markwon = remember {
+		Markwon.builder(context)
+			.usePlugin(StrikethroughPlugin.create())
+			.build()
+	}
 	val isAuthor = currentUserId != null && currentUserId == post.author.id
 	val isLoggedIn = currentUserId != null
 

@@ -93,6 +93,7 @@ dependencies {
     implementation("io.noties.markwon:core:4.6.2")
     implementation("io.noties.markwon:image:4.6.2")
     implementation("io.noties.markwon:linkify:4.6.2")
+    implementation("io.noties.markwon:ext-strikethrough:4.6.2")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
