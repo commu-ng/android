@@ -353,15 +353,10 @@ private fun MyCommunityCard(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        shape = MaterialTheme.shapes.medium,
+        shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Column {
             // Banner Image
             if (community.bannerImageUrl != null) {
                 AsyncImage(
@@ -388,7 +383,7 @@ private fun MyCommunityCard(
                         Box(contentAlignment = Alignment.Center) {
                             Text(
                                 text = community.name.firstOrNull()?.uppercase() ?: "?",
-                                style = MaterialTheme.typography.headlineLarge,
+                                style = MaterialTheme.typography.displayMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -396,42 +391,30 @@ private fun MyCommunityCard(
                 }
             }
 
+            // Community Info
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier.padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Community Info
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = community.name,
-                            style = MaterialTheme.typography.titleMedium,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-
-                        Text(
-                            text = community.slug,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
+                    Text(
+                        text = community.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
 
                     // Role badge
                     community.role?.let { role ->
                         Surface(
                             color = when (role.lowercase()) {
-                                "owner" -> MaterialTheme.colorScheme.error
-                                "moderator" -> MaterialTheme.colorScheme.primary
+                                "owner" -> MaterialTheme.colorScheme.primaryContainer
+                                "moderator" -> MaterialTheme.colorScheme.secondaryContainer
                                 else -> MaterialTheme.colorScheme.surfaceVariant
                             },
                             shape = RoundedCornerShape(4.dp)
@@ -441,20 +424,21 @@ private fun MyCommunityCard(
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = when (role.lowercase()) {
-                                    "owner" -> MaterialTheme.colorScheme.onError
-                                    "moderator" -> MaterialTheme.colorScheme.onPrimary
+                                    "owner" -> MaterialTheme.colorScheme.onPrimaryContainer
+                                    "moderator" -> MaterialTheme.colorScheme.onSecondaryContainer
                                     else -> MaterialTheme.colorScheme.onSurfaceVariant
                                 }
                             )
                         }
                     }
-
-                    Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
+
+                // Slug
+                Text(
+                    text = community.slug,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
                 // Actions Row
                 Row(
@@ -468,7 +452,7 @@ private fun MyCommunityCard(
                         Surface(
                             onClick = onApplicationsClick,
                             color = MaterialTheme.colorScheme.errorContainer,
-                            shape = MaterialTheme.shapes.small
+                            shape = RoundedCornerShape(4.dp)
                         ) {
                             Text(
                                 text = stringResource(R.string.communities_pending, pendingCount),
