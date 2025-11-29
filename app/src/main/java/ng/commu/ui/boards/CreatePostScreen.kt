@@ -65,15 +65,21 @@ fun CreatePostScreen(
 
     val isPromoBoard = boardSlug == "promo"
 
+    // Helper function to parse hashtags - handles comma/space separation and # prefix
+    fun parseHashtags(input: String): List<String> {
+        return input
+            .replace(",", " ")
+            .split(" ")
+            .map { it.trim().trimStart('#') }
+            .filter { it.isNotEmpty() }
+    }
+
     // Auto-sync community type with hashtags (only for promo board)
     LaunchedEffect(communityType) {
         if (!isPromoBoard) return@LaunchedEffect
 
         val communityTypeLabels = Constants.COMMUNITY_TYPE_LABELS.values.toSet()
-        val currentHashtags = hashtags
-            .split(",")
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
+        val currentHashtags = parseHashtags(hashtags)
 
         // Remove any existing community type hashtags
         val filtered = currentHashtags.filter { it !in communityTypeLabels }
@@ -161,10 +167,7 @@ fun CreatePostScreen(
                             isCreating = true
                             errorMessage = null
 
-                            val hashtagList = hashtags
-                                .split(",")
-                                .map { it.trim() }
-                                .filter { it.isNotEmpty() }
+                            val hashtagList = parseHashtags(hashtags)
                                 .takeIf { it.isNotEmpty() }
 
                             viewModel.createPost(
