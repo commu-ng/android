@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,16 +65,32 @@ fun ChatScreen(
         }
     }
 
-    // Load messages when screen opens
-    LaunchedEffect(otherProfileId, currentProfile?.id) {
-        currentProfile?.id?.let { profileId ->
-            chatViewModel.loadMessages(otherProfileId, profileId)
+    // Track if user is at bottom of the list
+    val isAtBottom by remember {
+        derivedStateOf {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem == null || lastVisibleItem.index >= messages.size - 1
         }
     }
 
-    // Auto-scroll to bottom when new messages arrive
+    // Load messages when screen opens and start polling
+    LaunchedEffect(otherProfileId, currentProfile?.id) {
+        currentProfile?.id?.let { profileId ->
+            chatViewModel.loadMessages(otherProfileId, profileId)
+            chatViewModel.startPolling()
+        }
+    }
+
+    // Stop polling when leaving the screen
+    DisposableEffect(Unit) {
+        onDispose {
+            chatViewModel.stopPolling()
+        }
+    }
+
+    // Auto-scroll to bottom when new messages arrive (only if user is at bottom)
     LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty()) {
+        if (messages.isNotEmpty() && isAtBottom) {
             coroutineScope.launch {
                 listState.animateScrollToItem(messages.size - 1)
             }

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,6 +56,14 @@ fun GroupChatScreen(
         )
     }
 
+    // Track if user is at bottom of the list
+    val isAtBottom by remember {
+        derivedStateOf {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem == null || lastVisibleItem.index >= messages.size - 1
+        }
+    }
+
     // Load group chat and messages
     LaunchedEffect(groupChatId, currentProfile?.id) {
         currentProfile?.id?.let { profileId ->
@@ -64,9 +73,16 @@ fun GroupChatScreen(
         }
     }
 
-    // Auto-scroll to bottom when new messages arrive
+    // Stop polling when leaving the screen
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.stopPolling()
+        }
+    }
+
+    // Auto-scroll to bottom when new messages arrive (only if user is at bottom)
     LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty()) {
+        if (messages.isNotEmpty() && isAtBottom) {
             listState.animateScrollToItem(messages.size - 1)
         }
     }

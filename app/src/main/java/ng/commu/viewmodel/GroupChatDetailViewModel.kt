@@ -90,16 +90,24 @@ class GroupChatDetailViewModel @Inject constructor(
         }
     }
 
-    // Poll for new messages every 5 seconds
+    private var pollingJob: kotlinx.coroutines.Job? = null
+
+    // Poll for new messages every 1 second
     fun startPolling(groupChatId: String, profileId: String) {
-        viewModelScope.launch {
+        pollingJob?.cancel()
+        pollingJob = viewModelScope.launch {
             while (isActive) {
-                delay(5000) // 5 seconds
+                delay(1000) // 1 second
                 try {
                     val response = messageRepository.getGroupChatMessages(groupChatId, profileId)
                     if (response.isSuccessful) {
                         response.body()?.let { body ->
-                            _messages.value = body.data.reversed()
+                            val newMessages = body.data.reversed()
+                            if (newMessages.size != _messages.value.size ||
+                                (newMessages.isNotEmpty() && _messages.value.isNotEmpty() &&
+                                 newMessages.last().id != _messages.value.last().id)) {
+                                _messages.value = newMessages
+                            }
                         }
                     }
                 } catch (e: Exception) {
@@ -107,5 +115,15 @@ class GroupChatDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun stopPolling() {
+        pollingJob?.cancel()
+        pollingJob = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopPolling()
     }
 }

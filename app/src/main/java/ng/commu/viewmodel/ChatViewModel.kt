@@ -7,6 +7,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import ng.commu.data.model.Message
 import ng.commu.data.repository.MessageRepository
@@ -52,6 +55,7 @@ class ChatViewModel @Inject constructor(
     private var nextCursor: String? = null
     private var currentProfileId: String? = null
     private var otherProfileId: String? = null
+    private var pollingJob: Job? = null
 
     fun loadMessages(
         otherProfileId: String,
@@ -236,5 +240,52 @@ class ChatViewModel @Inject constructor(
         if (otherProfileId != null && currentProfileId != null) {
             loadMessages(otherProfileId!!, currentProfileId!!, refresh = true)
         }
+    }
+
+    fun startPolling() {
+        pollingJob?.cancel()
+        pollingJob = viewModelScope.launch {
+            while (isActive) {
+                delay(1000) // 1 second
+                pollForNewMessages()
+            }
+        }
+    }
+
+    fun stopPolling() {
+        pollingJob?.cancel()
+        pollingJob = null
+    }
+
+    private suspend fun pollForNewMessages() {
+        if (currentProfileId == null || otherProfileId == null) return
+
+        try {
+            val response = messageRepository.getConversationThread(
+                otherProfileId = otherProfileId!!,
+                profileId = currentProfileId!!,
+                limit = 50,
+                cursor = null
+            )
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    val newMessages = body.data.reversed()
+                    if (newMessages.size != _messages.value.size ||
+                        (newMessages.isNotEmpty() && _messages.value.isNotEmpty() &&
+                         newMessages.last().id != _messages.value.last().id)) {
+                        _messages.value = newMessages
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Polling failed", e)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopPolling()
     }
 }
