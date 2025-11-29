@@ -82,13 +82,14 @@ fun AccountSettingsScreen(
                     }
                 }
             )
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp)
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
+                    .padding(top = padding.calculateTopPadding())
                     .verticalScroll(rememberScrollState())
             ) {
                 if (isLoading && currentUser == null) {

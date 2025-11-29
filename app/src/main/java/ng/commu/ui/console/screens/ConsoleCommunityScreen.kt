@@ -134,12 +134,13 @@ fun ConsoleCommunityScreen(
                     }
                 }
             )
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp)
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(top = paddingValues.calculateTopPadding())
                 .pullToRefresh(
                     isRefreshing = isRefreshing,
                     state = pullToRefreshState,

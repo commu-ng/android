@@ -117,12 +117,13 @@ fun MessagesScreen(
                     Icon(Icons.Default.Add, contentDescription = stringResource(R.string.messages_new))
                 }
             }
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp)
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(top = paddingValues.calculateTopPadding())
         ) {
             when {
                 currentProfile == null -> {

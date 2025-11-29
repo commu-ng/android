@@ -121,12 +121,13 @@ fun HomeFeedScreen(
                     Icon(Icons.Default.Add, contentDescription = stringResource(R.string.cd_new_post))
                 }
             }
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp)
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(top = paddingValues.calculateTopPadding())
         ) {
             when {
                 isInitializing -> {

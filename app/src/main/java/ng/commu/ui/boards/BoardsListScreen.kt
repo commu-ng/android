@@ -47,14 +47,15 @@ fun BoardsListScreen(
                 },
                 title = { Text(stringResource(R.string.nav_boards)) }
             )
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp)
     ) { padding ->
         when (val state = boardsState) {
             is BoardsUiState.Loading -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(padding),
+                        .padding(top = padding.calculateTopPadding()),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
@@ -67,7 +68,7 @@ fun BoardsListScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(padding),
+                            .padding(top = padding.calculateTopPadding()),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -80,7 +81,7 @@ fun BoardsListScreen(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(padding),
+                            .padding(top = padding.calculateTopPadding()),
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
@@ -97,7 +98,7 @@ fun BoardsListScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(padding),
+                        .padding(top = padding.calculateTopPadding()),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(
