@@ -36,6 +36,9 @@ class PostListViewModel @Inject constructor(
     private val _hasMore = MutableStateFlow(false)
     val hasMore: StateFlow<Boolean> = _hasMore.asStateFlow()
 
+    private val _hasLoadedOnce = MutableStateFlow(false)
+    val hasLoadedOnce: StateFlow<Boolean> = _hasLoadedOnce.asStateFlow()
+
     private var nextCursor: String? = null
     private var currentProfileId: String? = null
 
@@ -74,6 +77,7 @@ class PostListViewModel @Inject constructor(
                 Log.e(TAG, "Failed to load posts", e)
             } finally {
                 _isLoading.value = false
+                _hasLoadedOnce.value = true
             }
         }
     }

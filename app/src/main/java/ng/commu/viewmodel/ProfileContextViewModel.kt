@@ -36,7 +36,7 @@ class ProfileContextViewModel @Inject constructor(
     val availableProfiles: StateFlow<List<Profile>> = _availableProfiles.asStateFlow()
     val profiles: StateFlow<List<Profile>> = _availableProfiles.asStateFlow()
 
-    private val _isLoading = MutableStateFlow(false)
+    private val _isLoading = MutableStateFlow(true) // Start as true to prevent flickering
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)

@@ -38,7 +38,7 @@ class CommunityContextViewModel @Inject constructor(
     val availableCommunities: StateFlow<List<Community>> = _availableCommunities.asStateFlow()
     val communities: StateFlow<List<Community>> = _availableCommunities.asStateFlow()
 
-    private val _isLoading = MutableStateFlow(false)
+    private val _isLoading = MutableStateFlow(true) // Start as true since we load in init
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)

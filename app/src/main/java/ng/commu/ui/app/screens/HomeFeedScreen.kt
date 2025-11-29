@@ -35,6 +35,7 @@ fun HomeFeedScreen(
     postListViewModel: PostListViewModel = hiltViewModel()
 ) {
     val currentCommunity by communityViewModel.currentCommunity.collectAsState()
+    val isLoadingCommunities by communityViewModel.isLoading.collectAsState()
     val currentProfile by profileViewModel.currentProfile.collectAsState()
     val profiles by profileViewModel.profiles.collectAsState()
     val isLoadingProfiles by profileViewModel.isLoading.collectAsState()
@@ -42,7 +43,11 @@ fun HomeFeedScreen(
     val isLoading by postListViewModel.isLoading.collectAsState()
     val isLoadingMore by postListViewModel.isLoadingMore.collectAsState()
     val hasMore by postListViewModel.hasMore.collectAsState()
+    val hasLoadedOnce by postListViewModel.hasLoadedOnce.collectAsState()
     val errorMessage by postListViewModel.errorMessage.collectAsState()
+
+    // Consolidated loading state - show loading until posts have been loaded at least once
+    val isInitializing = isLoadingCommunities || isLoadingProfiles || (currentProfile != null && !hasLoadedOnce)
 
     val listState = rememberLazyListState()
     var showProfileSwitcher by remember { mutableStateOf(false) }
@@ -124,8 +129,17 @@ fun HomeFeedScreen(
                 .padding(paddingValues)
         ) {
             when {
+                isInitializing -> {
+                    // Loading community/profile context
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
                 currentCommunity == null -> {
-                    // No community selected
+                    // No community selected (after loading completed)
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -144,7 +158,7 @@ fun HomeFeedScreen(
                     }
                 }
                 currentProfile == null -> {
-                    // No profile selected
+                    // No profile selected (after loading completed)
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -160,15 +174,6 @@ fun HomeFeedScreen(
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                    }
-                }
-                isLoading && posts.isEmpty() -> {
-                    // Initial loading
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
                     }
                 }
                 errorMessage != null && posts.isEmpty() -> {
