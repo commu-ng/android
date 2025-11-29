@@ -140,9 +140,12 @@ class BoardsViewModel @Inject constructor(
         }
     }
 
-    fun loadBoardHashtags(boardSlug: String) {
+    fun loadBoardHashtags(boardSlug: String, showLoading: Boolean = true) {
         viewModelScope.launch {
-            _hashtagsState.value = HashtagsUiState.Loading
+            // Only show loading state if requested (not during refresh)
+            if (showLoading) {
+                _hashtagsState.value = HashtagsUiState.Loading
+            }
             boardRepository.getBoardHashtags(boardSlug)
                 .onSuccess { hashtags ->
                     _hashtagsState.value = HashtagsUiState.Success(hashtags)
@@ -153,6 +156,35 @@ class BoardsViewModel @Inject constructor(
                     )
                 }
         }
+    }
+
+    private suspend fun loadBoardHashtagsSuspend(boardSlug: String) {
+        boardRepository.getBoardHashtags(boardSlug)
+            .onSuccess { hashtags ->
+                _hashtagsState.value = HashtagsUiState.Success(hashtags)
+            }
+            .onFailure { error ->
+                _hashtagsState.value = HashtagsUiState.Error(
+                    error.message ?: "Failed to load hashtags"
+                )
+            }
+    }
+
+    private suspend fun loadPostsSuspend(boardSlug: String) {
+        val hashtags = _selectedHashtags.value
+        boardRepository.getPosts(boardSlug, hashtags = hashtags.ifEmpty { null })
+            .onSuccess { response ->
+                _postsState.value = PostsUiState.Success(
+                    posts = response.data,
+                    nextCursor = response.pagination.nextCursor,
+                    hasMore = response.pagination.hasMore
+                )
+            }
+            .onFailure { error ->
+                _postsState.value = PostsUiState.Error(
+                    error.message ?: "Failed to load posts"
+                )
+            }
     }
 
     fun loadPosts(boardSlug: String, refresh: Boolean = false, cursor: String? = null) {
@@ -217,8 +249,8 @@ class BoardsViewModel @Inject constructor(
         val slug = board.slug ?: return
         viewModelScope.launch {
             _isRefreshing.value = true
-            loadBoardHashtags(slug)
-            loadPosts(slug, refresh = true)
+            loadBoardHashtagsSuspend(slug)
+            loadPostsSuspend(slug)
             _isRefreshing.value = false
         }
     }
