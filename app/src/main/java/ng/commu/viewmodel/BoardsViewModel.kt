@@ -87,6 +87,9 @@ class BoardsViewModel @Inject constructor(
     private val _isCreatingReply = MutableStateFlow(false)
     val isCreatingReply: StateFlow<Boolean> = _isCreatingReply.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     fun loadBoards() {
         viewModelScope.launch {
             _boardsState.value = BoardsUiState.Loading
@@ -207,6 +210,17 @@ class BoardsViewModel @Inject constructor(
         val board = _selectedBoard.value ?: return
         val slug = board.slug ?: return
         loadPosts(slug, refresh = true)
+    }
+
+    fun refreshPosts() {
+        val board = _selectedBoard.value ?: return
+        val slug = board.slug ?: return
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            loadBoardHashtags(slug)
+            loadPosts(slug, refresh = true)
+            _isRefreshing.value = false
+        }
     }
 
     fun loadPostDetail(boardSlug: String, postId: String) {

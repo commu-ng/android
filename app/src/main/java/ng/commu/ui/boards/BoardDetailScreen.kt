@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -111,6 +112,7 @@ fun BoardDetailScreen(
                 val selectedHashtags by viewModel.selectedHashtags.collectAsState()
                 val hashtagsState by viewModel.hashtagsState.collectAsState()
                 val isLoadingContent by viewModel.isLoadingBoardContent.collectAsState()
+                val isRefreshing by viewModel.isRefreshing.collectAsState()
                 var isFirstLoad by remember { mutableStateOf(true) }
 
                 // Scroll to top when hashtags change (skip first load)
@@ -121,7 +123,12 @@ fun BoardDetailScreen(
                     isFirstLoad = false
                 }
 
-                LazyColumn(
+                PullToRefreshBox(
+                    isRefreshing = isRefreshing,
+                    onRefresh = { viewModel.refreshPosts() },
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    LazyColumn(
                     state = listState,
                     modifier = Modifier
                         .fillMaxSize()
@@ -310,6 +317,7 @@ fun BoardDetailScreen(
                         }
                     }
                 }
+            }
             }
             is PostsUiState.Error -> {
                 Box(
