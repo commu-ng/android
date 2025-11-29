@@ -177,7 +177,7 @@ class ChatViewModel @Inject constructor(
                             val file = ng.commu.utils.FileUtils.uriToFile(context, uri)
                             val response = postRepository.uploadImage(file)
                             if (response.isSuccessful) {
-                                response.body()?.let { uploadedIds.add(it.id) }
+                                response.body()?.data?.let { uploadedIds.add(it.id) }
                             } else {
                                 Log.e(TAG, "Failed to upload image: ${response.errorBody()?.string()}")
                             }

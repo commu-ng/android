@@ -54,7 +54,7 @@ interface ApiService {
 
     @Multipart
     @POST("/console/upload/file")
-    suspend fun uploadImage(@Part file: okhttp3.MultipartBody.Part): Response<ImageUploadResponse>
+    suspend fun uploadImage(@Part file: okhttp3.MultipartBody.Part): Response<ImageUploadResponseWrapper>
 
     @POST("/console/board/{boardSlug}/posts")
     suspend fun createPost(
@@ -167,6 +167,22 @@ interface ApiService {
         @Path("applicationId") applicationId: String,
         @Body request: ApplicationReviewRequest
     ): Response<ApplicationReviewResponseWrapper>
+
+    @POST("/console/communities")
+    suspend fun createCommunity(
+        @Body request: CommunityCreateRequest
+    ): Response<CommunityCreateResponseWrapper>
+
+    @PUT("/console/communities/{communityId}")
+    suspend fun updateCommunity(
+        @Path("communityId") communityId: String,
+        @Body request: CommunityUpdateRequest
+    ): Response<CommunityUpdateResponseWrapper>
+
+    @DELETE("/console/communities/{communityId}")
+    suspend fun deleteCommunity(
+        @Path("communityId") communityId: String
+    ): Response<Unit>
 
     // MARK: - App Endpoints (Community-scoped)
 

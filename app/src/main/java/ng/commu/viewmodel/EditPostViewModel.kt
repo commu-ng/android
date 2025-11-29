@@ -98,7 +98,7 @@ class EditPostViewModel @Inject constructor(
             val response = postRepository.uploadPostImage(imageData, filename)
 
             if (response.isSuccessful) {
-                response.body()?.let { result ->
+                response.body()?.data?.let { result ->
                     // Replace temp image with uploaded one
                     _images.value = _images.value.map { image ->
                         if (image.id == tempId) {

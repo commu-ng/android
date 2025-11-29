@@ -144,6 +144,10 @@ data class ImageUploadResponse(
     val filename: String
 )
 
+data class ImageUploadResponseWrapper(
+    val data: ImageUploadResponse
+)
+
 data class BoardPostReplyResponse(
     val data: BoardPostReply
 )

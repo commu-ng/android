@@ -63,8 +63,10 @@ import ng.commu.ui.app.screens.AppProfileScreen
 import ng.commu.ui.console.screens.ConsoleCommunityScreen
 import ng.commu.ui.console.screens.CommunityDetailScreen
 import ng.commu.ui.console.screens.CommunityApplicationScreen
+import ng.commu.ui.console.screens.CommunityCreationScreen
 import ng.commu.ui.console.screens.ApplicationsScreen
 import ng.commu.ui.console.screens.AccountSettingsScreen
+import ng.commu.ui.console.screens.CommunityEditScreen
 
 @Composable
 fun AppNavigation(
@@ -687,8 +689,51 @@ fun MainScreen(
                     },
                     onApplicationsClick = { slug ->
                         navController.navigate(Screen.CommunityApplications.createRoute(slug))
+                    },
+                    onCreateCommunity = {
+                        navController.navigate(Screen.CommunityCreation.route)
+                    },
+                    onEditCommunity = { community ->
+                        navController.navigate(Screen.CommunityEdit.createRoute(community.id))
                     }
                 )
+            }
+
+            composable(Screen.CommunityCreation.route) {
+                CommunityCreationScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                    onCommunityCreated = {
+                        communityContextViewModel.loadCommunities()
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable(
+                route = Screen.CommunityEdit.route,
+                arguments = listOf(navArgument("communityId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val communityId = backStackEntry.arguments?.getString("communityId") ?: return@composable
+                val communities by communityContextViewModel.availableCommunities.collectAsState()
+                val community = communities.find { it.id == communityId }
+
+                if (community != null) {
+                    CommunityEditScreen(
+                        community = community,
+                        onNavigateBack = { navController.popBackStack() },
+                        onCommunityUpdated = {
+                            communityContextViewModel.loadCommunities()
+                            navController.popBackStack()
+                        }
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
             }
 
             composable(

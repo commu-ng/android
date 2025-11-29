@@ -137,3 +137,65 @@ data class ApplicationReviewResponse(
 data class ApplicationReviewResponseWrapper(
     val data: ApplicationReviewResponse
 )
+
+data class CommunityCreateRequest(
+    val name: String,
+    val slug: String,
+    @Json(name = "starts_at") val startsAt: String,
+    @Json(name = "ends_at") val endsAt: String,
+    @Json(name = "is_recruiting") val isRecruiting: Boolean,
+    @Json(name = "recruiting_starts_at") val recruitingStartsAt: String?,
+    @Json(name = "recruiting_ends_at") val recruitingEndsAt: String?,
+    @Json(name = "minimum_birth_year") val minimumBirthYear: Int?,
+    @Json(name = "image_id") val imageId: String?,
+    val hashtags: List<String>?,
+    @Json(name = "profile_username") val profileUsername: String,
+    @Json(name = "profile_name") val profileName: String,
+    val description: String?,
+    @Json(name = "mute_new_members") val muteNewMembers: Boolean?
+)
+
+data class CommunityCreateResponse(
+    val id: String,
+    val name: String,
+    val domain: String,
+    @Json(name = "starts_at") val startsAt: String,
+    @Json(name = "ends_at") val endsAt: String,
+    @Json(name = "is_recruiting") val isRecruiting: Boolean,
+    @Json(name = "owner_profile_id") val ownerProfileId: String,
+    @Json(name = "created_at") val createdAt: String
+)
+
+data class CommunityCreateResponseWrapper(
+    val data: CommunityCreateResponse
+)
+
+data class CommunityUpdateRequest(
+    val name: String,
+    val slug: String,
+    @Json(name = "starts_at") val startsAt: String,
+    @Json(name = "ends_at") val endsAt: String,
+    @Json(name = "is_recruiting") val isRecruiting: Boolean,
+    @Json(name = "recruiting_starts_at") val recruitingStartsAt: String?,
+    @Json(name = "recruiting_ends_at") val recruitingEndsAt: String?,
+    @Json(name = "minimum_birth_year") val minimumBirthYear: Int?,
+    @Json(name = "image_id") val imageId: String?,
+    val hashtags: List<String>?,
+    val description: String?,
+    @Json(name = "mute_new_members") val muteNewMembers: Boolean?
+)
+
+data class CommunityUpdateResponse(
+    val id: String,
+    val name: String,
+    val slug: String,
+    @Json(name = "starts_at") val startsAt: String,
+    @Json(name = "ends_at") val endsAt: String,
+    @Json(name = "is_recruiting") val isRecruiting: Boolean,
+    @Json(name = "recruiting_starts_at") val recruitingStartsAt: String?,
+    @Json(name = "recruiting_ends_at") val recruitingEndsAt: String?
+)
+
+data class CommunityUpdateResponseWrapper(
+    val data: CommunityUpdateResponse
+)

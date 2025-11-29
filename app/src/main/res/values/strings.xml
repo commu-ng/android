@@ -449,6 +449,68 @@
     <!-- Composer -->
     <string name="composer_next">Next</string>
 
+    <!-- Community Creation -->
+    <string name="community_create_title">Create Community</string>
+    <string name="community_create_section_basic">Basic Info</string>
+    <string name="community_create_name">Community Name</string>
+    <string name="community_create_name_placeholder">Enter community name</string>
+    <string name="community_create_slug">Community ID</string>
+    <string name="community_create_slug_placeholder">e.g., my-community</string>
+    <string name="community_create_slug_invalid">ID must contain only lowercase letters, numbers, and hyphens (no consecutive hyphens)</string>
+    <string name="community_create_section_profile">Owner Profile</string>
+    <string name="community_create_section_profile_footer">This profile will be created as the community owner</string>
+    <string name="community_create_profile_name">Profile Name</string>
+    <string name="community_create_profile_name_placeholder">Your display name</string>
+    <string name="community_create_profile_name_hint">Display name visible to community members</string>
+    <string name="community_create_profile_username">Profile ID</string>
+    <string name="community_create_profile_username_placeholder">username</string>
+    <string name="community_create_section_schedule">Schedule</string>
+    <string name="community_create_start_date">Start Date</string>
+    <string name="community_create_end_date">End Date</string>
+    <string name="community_create_date_invalid">End date must be after start date</string>
+    <string name="community_create_section_recruiting">Recruitment</string>
+    <string name="community_create_recruiting">Public Recruiting</string>
+    <string name="community_create_recruiting_period">Recruiting Period</string>
+    <string name="community_create_recruiting_start">Recruiting Start</string>
+    <string name="community_create_recruiting_end">Recruiting End</string>
+    <string name="community_create_min_birth_year">Minimum Birth Year</string>
+    <string name="community_create_min_birth_year_placeholder">e.g., 2005</string>
+    <string name="community_create_min_birth_year_hint">Only users born in this year or later can join</string>
+    <string name="community_create_section_settings">Settings</string>
+    <string name="community_create_mute_new_members">Mute New Members</string>
+    <string name="community_create_mute_new_members_hint">New members cannot post publicly until allowed</string>
+    <string name="community_create_submit">Create Community</string>
+    <string name="community_create_success_title">Community Created!</string>
+    <string name="community_create_success_message">Your community has been created successfully.</string>
+    <string name="community_create_select_time">Select Time</string>
+    <string name="action_change">Change</string>
+    <string name="action_next">Next</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="community_create_section_image">Banner Image</string>
+    <string name="community_create_image_select">Select Image</string>
+    <string name="community_create_image_change">Change Image</string>
+    <string name="community_create_image_remove">Remove</string>
+    <string name="community_create_image_uploading">Uploading...</string>
+
+    <!-- Community Edit -->
+    <string name="community_edit_title">Edit Community</string>
+    <string name="community_edit_save">Save Changes</string>
+    <string name="community_edit_saving">Saving...</string>
+    <string name="community_edit_success_title">Changes Saved!</string>
+    <string name="community_edit_success_message">Your community settings have been updated.</string>
+
+    <!-- Community Delete -->
+    <string name="community_delete_section">Danger Zone</string>
+    <string name="community_delete_warning">Deleting your community is permanent and cannot be undone. All community data will be lost.</string>
+    <string name="community_delete_button">Delete Community</string>
+    <string name="community_delete_confirm_title">Delete Community</string>
+    <string name="community_delete_confirm_message">To confirm, type the community ID: %1$s</string>
+    <string name="community_delete_confirm_placeholder">Enter community ID</string>
+    <string name="community_delete_confirm_button">Delete</string>
+    <string name="community_delete_deleting">Deleting...</string>
+    <string name="community_delete_success_title">Community Deleted</string>
+    <string name="community_delete_success_message">Your community has been permanently deleted.</string>
+
     <!-- Markdown Help -->
     <string name="markdown_text_formatting">Text Formatting</string>
     <string name="markdown_bold">Bold text</string>

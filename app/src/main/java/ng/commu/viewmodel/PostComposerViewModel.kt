@@ -199,7 +199,7 @@ class PostComposerViewModel @Inject constructor(
             for (file in imageFiles) {
                 val response = postRepository.uploadImage(file)
                 if (response.isSuccessful) {
-                    val imageId = response.body()?.id
+                    val imageId = response.body()?.data?.id
                     if (imageId != null) {
                         uploadedIds.add(imageId)
                         Log.d(TAG, "Uploaded image: $imageId")

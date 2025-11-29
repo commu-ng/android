@@ -6,9 +6,15 @@ import ng.commu.data.model.ApplyToCommunityRequest
 import ng.commu.data.model.Community
 import ng.commu.data.model.CommunityApplication
 import ng.commu.data.model.CommunityApplicationDetail
+import ng.commu.data.model.CommunityCreateRequest
+import ng.commu.data.model.CommunityCreateResponse
 import ng.commu.data.model.CommunityDetails
 import ng.commu.data.model.CommunityLink
+import ng.commu.data.model.CommunityUpdateRequest
+import ng.commu.data.model.CommunityUpdateResponse
+import ng.commu.data.model.ImageUploadResponse
 import ng.commu.data.remote.ApiService
+import okhttp3.MultipartBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -152,6 +158,58 @@ class CommunityRepository @Inject constructor(
                 Result.success(response.body()!!.data)
             } else {
                 Result.failure(Exception("Failed to reject application: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun createCommunity(request: CommunityCreateRequest): Result<CommunityCreateResponse> {
+        return try {
+            val response = apiService.createCommunity(request)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!.data)
+            } else {
+                Result.failure(Exception("Failed to create community: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun uploadImage(file: MultipartBody.Part): Result<ImageUploadResponse> {
+        return try {
+            val response = apiService.uploadImage(file)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!.data)
+            } else {
+                Result.failure(Exception("Failed to upload image: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateCommunity(communityId: String, request: CommunityUpdateRequest): Result<CommunityUpdateResponse> {
+        return try {
+            val response = apiService.updateCommunity(communityId, request)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!.data)
+            } else {
+                Result.failure(Exception("Failed to update community: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteCommunity(communityId: String): Result<Unit> {
+        return try {
+            val response = apiService.deleteCommunity(communityId)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Failed to delete community: ${response.message()}"))
             }
         } catch (e: Exception) {
             Result.failure(e)

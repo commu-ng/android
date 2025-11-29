@@ -52,5 +52,9 @@ sealed class Screen(val route: String) {
     object CommunityApplications : Screen("community_applications/{slug}") {
         fun createRoute(slug: String) = "community_applications/$slug"
     }
+    object CommunityCreation : Screen("community_creation")
+    object CommunityEdit : Screen("community_edit/{communityId}") {
+        fun createRoute(communityId: String) = "community_edit/$communityId"
+    }
     object AccountSettings : Screen("account_settings")
 }
