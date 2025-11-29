@@ -33,6 +33,7 @@ import java.util.*
 @Composable
 fun NotificationsScreen(
     onPostClick: (String) -> Unit = {},
+    onSwitchToConsole: () -> Unit = {},
     profileViewModel: ProfileContextViewModel = hiltViewModel(),
     viewModel: NotificationViewModel = hiltViewModel()
 ) {
@@ -47,6 +48,14 @@ fun NotificationsScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
+            navigationIcon = {
+                IconButton(onClick = onSwitchToConsole) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ExitToApp,
+                        contentDescription = stringResource(R.string.nav_console)
+                    )
+                }
+            },
             title = { Text(stringResource(R.string.nav_notifications)) },
             actions = {
                 if (notificationsState is NotificationsUiState.Success) {

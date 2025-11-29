@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -33,6 +34,7 @@ import ng.commu.viewmodel.ProfileContextViewModel
 @Composable
 fun MessagesScreen(
     onConversationClick: (String, String) -> Unit,
+    onSwitchToConsole: () -> Unit = {},
     profileViewModel: ProfileContextViewModel = hiltViewModel(),
     conversationsViewModel: ConversationsViewModel = hiltViewModel(),
     memberDirectoryViewModel: MemberDirectoryViewModel = hiltViewModel()
@@ -95,6 +97,14 @@ fun MessagesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = onSwitchToConsole) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                            contentDescription = stringResource(R.string.nav_console)
+                        )
+                    }
+                },
                 title = {
                     Text(
                         text = if (unreadCount > 0) stringResource(R.string.messages_with_count, unreadCount) else stringResource(R.string.messages_title)

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -27,6 +28,7 @@ import ng.commu.viewmodel.ProfileContextViewModel
 fun AppProfileScreen(
     communityContextViewModel: CommunityContextViewModel = hiltViewModel(),
     profileContextViewModel: ProfileContextViewModel = hiltViewModel(),
+    onSwitchToConsole: () -> Unit = {},
     onNavigateToBookmarks: () -> Unit = {},
     onNavigateToSearch: () -> Unit = {},
     onNavigateToProfileSettings: () -> Unit = {},
@@ -42,6 +44,14 @@ fun AppProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = onSwitchToConsole) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                            contentDescription = stringResource(R.string.nav_console)
+                        )
+                    }
+                },
                 title = { Text(stringResource(R.string.profile_title)) }
             )
         },

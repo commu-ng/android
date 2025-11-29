@@ -487,6 +487,14 @@ fun MainScreen(
                     onPostClick = { postId ->
                         navController.navigate(Screen.AppPostDetail.createRoute(postId))
                     },
+                    onSwitchToConsole = {
+                        appModeViewModel.switchMode(AppMode.CONSOLE)
+                        navController.navigate(Screen.Boards.route) {
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
                     profileViewModel = profileContextViewModel,
                     viewModel = notificationViewModel
                 )
@@ -567,6 +575,14 @@ fun MainScreen(
                     onConversationClick = { profileId, profileName ->
                         navController.navigate(Screen.Chat.createRoute(profileId, profileName))
                     },
+                    onSwitchToConsole = {
+                        appModeViewModel.switchMode(AppMode.CONSOLE)
+                        navController.navigate(Screen.Boards.route) {
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
                     profileViewModel = profileContextViewModel
                 )
             }
@@ -632,6 +648,14 @@ fun MainScreen(
 
             composable(Screen.AppProfile.route) {
                 AppProfileScreen(
+                    onSwitchToConsole = {
+                        appModeViewModel.switchMode(AppMode.CONSOLE)
+                        navController.navigate(Screen.Boards.route) {
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
                     onNavigateToBookmarks = {
                         navController.navigate(Screen.Bookmarks.route)
                     },
