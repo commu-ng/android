@@ -45,7 +45,7 @@ class PostListViewModel @Inject constructor(
     fun loadPosts(profileId: String, refresh: Boolean = false) {
         if (refresh) {
             nextCursor = null
-            _posts.value = emptyList()
+            // Don't clear posts during refresh to avoid flickering
         }
 
         viewModelScope.launch {
