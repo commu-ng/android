@@ -57,4 +57,5 @@ sealed class Screen(val route: String) {
         fun createRoute(communityId: String) = "community_edit/$communityId"
     }
     object AccountSettings : Screen("account_settings")
+    object BlockedUsers : Screen("blocked_users")
 }

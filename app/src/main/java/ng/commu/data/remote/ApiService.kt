@@ -482,4 +482,14 @@ interface ApiService {
         @Path("profileId") profileId: String,
         @Path("sharedProfileId") sharedProfileId: String
     ): Response<Unit>
+
+    // Blocked Users
+    @GET("/console/blocks")
+    suspend fun getBlockedUsers(): Response<BlockedUsersResponse>
+
+    @POST("/console/blocks/{userId}")
+    suspend fun blockUser(@Path("userId") userId: String): Response<BlockResponse>
+
+    @DELETE("/console/blocks/{userId}")
+    suspend fun unblockUser(@Path("userId") userId: String): Response<Unit>
 }

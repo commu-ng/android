@@ -12,7 +12,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PersonOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,6 +34,7 @@ import ng.commu.data.model.Post
 import ng.commu.utils.formatFullDate
 import ng.commu.utils.formatRelativeTime
 import ng.commu.viewmodel.AuthViewModel
+import ng.commu.viewmodel.BlockedUsersViewModel
 import ng.commu.viewmodel.BoardsViewModel
 import ng.commu.viewmodel.PostDetailUiState
 import ng.commu.viewmodel.RepliesUiState
@@ -43,7 +46,8 @@ fun PostDetailScreen(
     postId: String,
     onNavigateBack: () -> Unit,
     viewModel: BoardsViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    blockViewModel: BlockedUsersViewModel = hiltViewModel()
 ) {
     val postDetailState by viewModel.postDetailState.collectAsState()
     val selectedBoard by viewModel.selectedBoard.collectAsState()
@@ -124,6 +128,7 @@ fun PostDetailScreen(
                             currentUserId = currentUser?.id,
                             boardSlug = boardSlug,
                             viewModel = viewModel,
+                            blockViewModel = blockViewModel,
                             onNavigateBack = onNavigateBack
                         )
                     }
@@ -171,7 +176,9 @@ fun PostDetailScreen(
                                             boardSlug = boardSlug,
                                             postId = postId,
                                             viewModel = viewModel,
-                                            onReplyClick = { replyingTo = it }
+                                            blockViewModel = blockViewModel,
+                                            onReplyClick = { replyingTo = it },
+                                            onNavigateBack = onNavigateBack
                                         )
                                     }
                                 }
@@ -221,11 +228,14 @@ fun PostContent(
 	currentUserId: String?,
 	boardSlug: String,
 	viewModel: BoardsViewModel,
+	blockViewModel: BlockedUsersViewModel,
 	onNavigateBack: () -> Unit
 ) {
 	var showImageDialog by remember { mutableStateOf(false) }
 	var showDeleteDialog by remember { mutableStateOf(false) }
 	var showReportDialog by remember { mutableStateOf(false) }
+	var showBlockDialog by remember { mutableStateOf(false) }
+	var showMenu by remember { mutableStateOf(false) }
 	var reportReason by remember { mutableStateOf("") }
 	val context = LocalContext.current
 	val markwon = remember {
@@ -272,14 +282,40 @@ fun PostContent(
 				)
 			}
 
-			// Report button (for non-author logged in users)
+			// Menu for non-author (Report, Block)
 			if (!isAuthor && isLoggedIn) {
-				IconButton(onClick = { showReportDialog = true }) {
-					Icon(
-						Icons.Default.Flag,
-						contentDescription = "Report post",
-						tint = MaterialTheme.colorScheme.error
-					)
+				Box {
+					IconButton(onClick = { showMenu = true }) {
+						Icon(
+							Icons.Default.MoreVert,
+							contentDescription = stringResource(R.string.cd_more_options)
+						)
+					}
+					DropdownMenu(
+						expanded = showMenu,
+						onDismissRequest = { showMenu = false }
+					) {
+						DropdownMenuItem(
+							text = { Text(stringResource(R.string.action_report)) },
+							onClick = {
+								showMenu = false
+								showReportDialog = true
+							},
+							leadingIcon = {
+								Icon(Icons.Default.Flag, contentDescription = null)
+							}
+						)
+						DropdownMenuItem(
+							text = { Text(stringResource(R.string.block_user)) },
+							onClick = {
+								showMenu = false
+								showBlockDialog = true
+							},
+							leadingIcon = {
+								Icon(Icons.Default.PersonOff, contentDescription = null)
+							}
+						)
+					}
 				}
 			}
 
@@ -426,6 +462,36 @@ fun PostContent(
 			}
 		)
 	}
+
+	// Block confirmation dialog
+	if (showBlockDialog) {
+		AlertDialog(
+			onDismissRequest = { showBlockDialog = false },
+			title = { Text(stringResource(R.string.block_confirm_title)) },
+			text = { Text(stringResource(R.string.block_confirm_message)) },
+			confirmButton = {
+				TextButton(
+					onClick = {
+						showBlockDialog = false
+						blockViewModel.blockUser(
+							userId = post.author.id,
+							onSuccess = {
+								viewModel.loadPosts(boardSlug, refresh = true)
+								onNavigateBack()
+							}
+						)
+					}
+				) {
+					Text(stringResource(R.string.block_user), color = MaterialTheme.colorScheme.error)
+				}
+			},
+			dismissButton = {
+				TextButton(onClick = { showBlockDialog = false }) {
+					Text(stringResource(R.string.action_cancel))
+				}
+			}
+		)
+	}
 }
 
 @Composable
@@ -502,12 +568,17 @@ fun ReplyItem(
     boardSlug: String,
     postId: String,
     viewModel: BoardsViewModel,
-    onReplyClick: (BoardPostReply) -> Unit
+    blockViewModel: BlockedUsersViewModel,
+    onReplyClick: (BoardPostReply) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val visualDepth = minOf(depth, 5)
     val indentPadding = (visualDepth * 20).dp
     val isAuthor = currentUserId != null && currentUserId == reply.author.id
+    val isLoggedIn = currentUserId != null
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showBlockDialog by remember { mutableStateOf(false) }
+    var showMenu by remember { mutableStateOf(false) }
 
     Column {
         // Main reply content with indentation
@@ -577,6 +648,37 @@ fun ReplyItem(
                                 )
                             }
                         }
+
+                        // Menu for non-author (Block)
+                        if (!isAuthor && isLoggedIn) {
+                            Box {
+                                IconButton(
+                                    onClick = { showMenu = true },
+                                    modifier = Modifier.size(24.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.MoreVert,
+                                        contentDescription = stringResource(R.string.cd_more_options),
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = showMenu,
+                                    onDismissRequest = { showMenu = false }
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.block_user)) },
+                                        onClick = {
+                                            showMenu = false
+                                            showBlockDialog = true
+                                        },
+                                        leadingIcon = {
+                                            Icon(Icons.Default.PersonOff, contentDescription = null)
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -615,7 +717,9 @@ fun ReplyItem(
                 boardSlug = boardSlug,
                 postId = postId,
                 viewModel = viewModel,
-                onReplyClick = onReplyClick
+                blockViewModel = blockViewModel,
+                onReplyClick = onReplyClick,
+                onNavigateBack = onNavigateBack
             )
         }
     }
@@ -643,6 +747,36 @@ fun ReplyItem(
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            }
+        )
+    }
+
+    // Block confirmation dialog
+    if (showBlockDialog) {
+        AlertDialog(
+            onDismissRequest = { showBlockDialog = false },
+            title = { Text(stringResource(R.string.block_confirm_title)) },
+            text = { Text(stringResource(R.string.block_confirm_message)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showBlockDialog = false
+                        blockViewModel.blockUser(
+                            userId = reply.author.id,
+                            onSuccess = {
+                                viewModel.loadPosts(boardSlug, refresh = true)
+                                onNavigateBack()
+                            }
+                        )
+                    }
+                ) {
+                    Text(stringResource(R.string.block_user), color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showBlockDialog = false }) {
                     Text(stringResource(R.string.action_cancel))
                 }
             }

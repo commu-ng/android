@@ -531,4 +531,15 @@
     <string name="markdown_code_blocks">Code Blocks</string>
     <string name="markdown_line_breaks">Line Breaks</string>
     <string name="markdown_line_breaks_hint">To create a new paragraph, leave a blank line between text:</string>
+
+    <!-- Blocked Users -->
+    <string name="block_title">Blocked Users</string>
+    <string name="block_section">Blocked</string>
+    <string name="block_manage">Manage Blocked Users</string>
+    <string name="block_empty">No blocked users</string>
+    <string name="block_empty_description">You can block users from their profile</string>
+    <string name="block_unblock">Unblock</string>
+    <string name="block_user">Block User</string>
+    <string name="block_confirm_title">Block User</string>
+    <string name="block_confirm_message">Are you sure you want to block this user? Their posts will no longer appear.</string>
 </resources>

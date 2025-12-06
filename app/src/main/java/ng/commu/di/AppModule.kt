@@ -8,12 +8,15 @@ import ng.commu.data.local.CommunityContextManager
 import ng.commu.data.local.SessionManager
 import ng.commu.data.remote.ApiService
 import ng.commu.data.remote.AuthInterceptor
+import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.net.CookieManager
+import java.net.CookiePolicy
 import javax.inject.Singleton
 
 @Module
@@ -31,12 +34,25 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+    fun provideCookieJar(): JavaNetCookieJar {
+        val cookieManager = CookieManager().apply {
+            setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+        }
+        return JavaNetCookieJar(cookieManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor,
+        cookieJar: JavaNetCookieJar
+    ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
         return OkHttpClient.Builder()
+            .cookieJar(cookieJar)
             .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .build()

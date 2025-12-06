@@ -67,6 +67,7 @@ import ng.commu.ui.console.screens.CommunityApplicationScreen
 import ng.commu.ui.console.screens.CommunityCreationScreen
 import ng.commu.ui.console.screens.ApplicationsScreen
 import ng.commu.ui.console.screens.AccountSettingsScreen
+import ng.commu.ui.console.screens.BlockedUsersScreen
 import ng.commu.ui.console.screens.CommunityEditScreen
 
 @Composable
@@ -825,7 +826,16 @@ fun MainScreen(
                         navController.navigate(Screen.Login.route) {
                             popUpTo(navController.graph.startDestinationId) { inclusive = true }
                         }
+                    },
+                    onNavigateToBlockedUsers = {
+                        navController.navigate(Screen.BlockedUsers.route)
                     }
+                )
+            }
+
+            composable(Screen.BlockedUsers.route) {
+                BlockedUsersScreen(
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }

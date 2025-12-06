@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.PersonOff
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -39,6 +40,7 @@ import java.util.*
 fun AccountSettingsScreen(
     onNavigateBack: () -> Unit,
     onLogout: () -> Unit,
+    onNavigateToBlockedUsers: () -> Unit = {},
     viewModel: AccountSettingsViewModel = hiltViewModel()
 ) {
     val currentUser by viewModel.currentUser.collectAsStateWithLifecycle()
@@ -200,6 +202,33 @@ fun AccountSettingsScreen(
                                     )
                                 }
                             }
+                        }
+
+                        // Blocked Users
+                        Text(
+                            text = stringResource(R.string.block_section),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(16.dp, 24.dp, 16.dp, 8.dp)
+                        )
+
+                        ElevatedCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                        ) {
+                            ListItem(
+                                headlineContent = { Text(stringResource(R.string.block_manage)) },
+                                leadingContent = {
+                                    Icon(Icons.Default.PersonOff, contentDescription = null)
+                                },
+                                trailingContent = {
+                                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onNavigateToBlockedUsers() }
+                            )
                         }
 
                         // Logout & Delete
