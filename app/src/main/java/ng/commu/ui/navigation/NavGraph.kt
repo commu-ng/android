@@ -341,9 +341,15 @@ fun MainScreen(
             }
         }
     ) { paddingValues ->
+        val startDestination = when {
+            !isAuthenticated -> Screen.Boards.route
+            currentMode == AppMode.CONSOLE -> Screen.Boards.route
+            else -> Screen.HomeFeed.route
+        }
+
         NavHost(
             navController = navController,
-            startDestination = if (isAuthenticated) Screen.HomeFeed.route else Screen.Boards.route,
+            startDestination = startDestination,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Screen.Login.route) {
