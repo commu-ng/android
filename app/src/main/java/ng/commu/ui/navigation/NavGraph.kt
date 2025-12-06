@@ -266,12 +266,14 @@ fun MainScreen(
                             NavigationBarItem(
                                 icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) },
                                 label = { Text(stringResource(R.string.nav_boards_kr)) },
-                                selected = currentRoute == Screen.Boards.route,
+                                selected = currentRoute == Screen.Boards.route ||
+                                    currentRoute?.startsWith("board_detail") == true ||
+                                    currentRoute?.startsWith("post_detail") == true ||
+                                    currentRoute?.startsWith("create_post") == true,
                                 onClick = {
                                     navController.navigate(Screen.Boards.route) {
-                                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                                        popUpTo(Screen.Boards.route) { inclusive = true }
                                         launchSingleTop = true
-                                        restoreState = true
                                     }
                                 }
                             )
@@ -310,12 +312,14 @@ fun MainScreen(
                     NavigationBarItem(
                         icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) },
                         label = { Text(stringResource(R.string.nav_boards_kr)) },
-                        selected = currentRoute == Screen.Boards.route,
+                        selected = currentRoute == Screen.Boards.route ||
+                            currentRoute?.startsWith("board_detail") == true ||
+                            currentRoute?.startsWith("post_detail") == true ||
+                            currentRoute?.startsWith("create_post") == true,
                         onClick = {
                             navController.navigate(Screen.Boards.route) {
-                                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                                popUpTo(Screen.Boards.route) { inclusive = true }
                                 launchSingleTop = true
-                                restoreState = true
                             }
                         }
                     )
