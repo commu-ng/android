@@ -1,9 +1,11 @@
 package ng.commu.ui.app.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddReaction
 import androidx.compose.material.icons.filled.Campaign
@@ -161,7 +163,16 @@ fun PostCard(
             .then(
                 if (!isDetail) Modifier.clickable { onPostClick(post.id) }
                 else Modifier
+            )
+            .then(
+                if (!isReply) Modifier.border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    shape = RoundedCornerShape(12.dp)
+                )
+                else Modifier
             ),
+        shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (isReply) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surface
         )
