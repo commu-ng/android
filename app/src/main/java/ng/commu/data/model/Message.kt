@@ -6,15 +6,15 @@ import com.squareup.moshi.Json
 
 data class Message(
     val id: String,
-    @Json(name = "sender_id") val senderId: String?,
-    @Json(name = "receiver_id") val receiverId: String?,
+    @Json(name = "sender_id") val senderId: String? = null,
+    @Json(name = "receiver_id") val receiverId: String? = null,
     val content: String,
     @Json(name = "created_at") val createdAt: String,
-    @Json(name = "read_at") val readAt: String?,
-    val sender: CommunityPostAuthor?,
-    val receiver: CommunityPostAuthor?,
-    val images: List<MessageImage>,
-    val reactions: List<MessageReaction>
+    @Json(name = "read_at") val readAt: String? = null,
+    val sender: CommunityPostAuthor? = null,
+    val receiver: CommunityPostAuthor? = null,
+    val images: List<MessageImage> = emptyList(),
+    val reactions: List<MessageReaction> = emptyList()
 )
 
 data class MessageImage(
