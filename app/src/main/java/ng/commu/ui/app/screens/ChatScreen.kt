@@ -281,7 +281,7 @@ fun ChatScreen(
                         items(messages, key = { it.id }) { message ->
                             MessageBubble(
                                 message = message,
-                                isOwnMessage = message.senderId == currentProfile?.id
+                                isOwnMessage = message.sender?.id == currentProfile?.id
                             )
                         }
                     }
