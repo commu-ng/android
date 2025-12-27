@@ -88,9 +88,18 @@ fun ChatScreen(
         }
     }
 
+    // Scroll to bottom on initial load
+    var hasScrolledToBottom by remember { mutableStateOf(false) }
+    LaunchedEffect(messages.size, isLoading) {
+        if (messages.isNotEmpty() && !isLoading && !hasScrolledToBottom) {
+            listState.scrollToItem(messages.size - 1)
+            hasScrolledToBottom = true
+        }
+    }
+
     // Auto-scroll to bottom when new messages arrive (only if user is at bottom)
     LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty() && isAtBottom) {
+        if (messages.isNotEmpty() && isAtBottom && hasScrolledToBottom) {
             coroutineScope.launch {
                 listState.animateScrollToItem(messages.size - 1)
             }
