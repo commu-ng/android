@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,8 @@ fun AppProfileScreen(
     val currentProfile by profileContextViewModel.currentProfile.collectAsState()
     val profiles by profileContextViewModel.availableProfiles.collectAsState()
     val currentProfileId by profileContextViewModel.currentProfileId.collectAsState()
+    val isLoading by profileContextViewModel.isLoading.collectAsState()
+    val currentCommunity by communityContextViewModel.currentCommunity.collectAsState()
 
     var showProfileSwitcher by remember { mutableStateOf(false) }
 
@@ -57,13 +60,22 @@ fun AppProfileScreen(
         },
         contentWindowInsets = WindowInsets(0.dp)
     ) { paddingValues ->
-        LazyColumn(
+        PullToRefreshBox(
+            isRefreshing = isLoading,
+            onRefresh = {
+                currentCommunity?.id?.let { communityId ->
+                    profileContextViewModel.refreshProfiles(communityId)
+                }
+            },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = paddingValues.calculateTopPadding()),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(top = paddingValues.calculateTopPadding())
         ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
             // Profile Header
             item {
                 currentProfile?.let { profile ->
@@ -330,6 +342,7 @@ fun AppProfileScreen(
                         )
                     }
                 }
+            }
             }
         }
     }
