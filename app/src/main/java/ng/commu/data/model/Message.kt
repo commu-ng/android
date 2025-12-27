@@ -25,11 +25,9 @@ data class MessageImage(
 )
 
 data class MessageReaction(
-    val id: String,
+    val id: String? = null,
     val emoji: String,
-    @Json(name = "profile_id") val profileId: String?,
-    val profile: CommunityPostAuthor?,
-    @Json(name = "created_at") val createdAt: String?
+    @Json(name = "user") val profile: CommunityPostAuthor? = null
 )
 
 // MARK: - Conversations
