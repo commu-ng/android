@@ -3,6 +3,7 @@ package ng.commu.data.repository
 import ng.commu.data.model.*
 import ng.commu.data.remote.ApiService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import retrofit2.Response
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -64,8 +65,9 @@ class ProfileRepository @Inject constructor(
 
     // MARK: - Profile Picture
 
-    suspend fun uploadProfilePicture(file: File) =
+    suspend fun uploadProfilePicture(profileId: String, file: File): Response<ProfilePictureResponse> =
         apiService.uploadProfilePicture(
+            profileId,
             MultipartBody.Part.createFormData(
                 "file",
                 file.name,
@@ -73,8 +75,9 @@ class ProfileRepository @Inject constructor(
             )
         )
 
-    suspend fun uploadProfilePicture(imageData: ByteArray, filename: String) =
+    suspend fun uploadProfilePicture(profileId: String, imageData: ByteArray, filename: String): Response<ProfilePictureResponse> =
         apiService.uploadProfilePicture(
+            profileId,
             MultipartBody.Part.createFormData(
                 "file",
                 filename,

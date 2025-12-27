@@ -60,16 +60,18 @@ fun ProfileSettingsScreen(
         uri?.let {
             viewModel.setProfilePictureUri(it)
             // Upload image
-            try {
-                val inputStream = context.contentResolver.openInputStream(it)
-                val bytes = inputStream?.readBytes()
-                inputStream?.close()
+            currentProfile?.id?.let { profileId ->
+                try {
+                    val inputStream = context.contentResolver.openInputStream(it)
+                    val bytes = inputStream?.readBytes()
+                    inputStream?.close()
 
-                bytes?.let { imageData ->
-                    viewModel.uploadProfilePicture(imageData, "profile.jpg")
+                    bytes?.let { imageData ->
+                        viewModel.uploadProfilePicture(profileId, imageData, "profile.jpg")
+                    }
+                } catch (e: Exception) {
+                    // Handle error
                 }
-            } catch (e: Exception) {
-                // Handle error
             }
         }
     }

@@ -83,7 +83,7 @@ class ProfileSettingsViewModel @Inject constructor(
         _profilePictureUri.value = uri
     }
 
-    fun uploadProfilePicture(imageData: ByteArray, filename: String) {
+    fun uploadProfilePicture(profileId: String, imageData: ByteArray, filename: String) {
         viewModelScope.launch {
             _isUploadingPicture.value = true
             _errorMessage.value = null
@@ -95,10 +95,10 @@ class ProfileSettingsViewModel @Inject constructor(
                     return@launch
                 }
 
-                val response = profileRepository.uploadProfilePicture(imageData, filename)
+                val response = profileRepository.uploadProfilePicture(profileId, imageData, filename)
                 if (response.isSuccessful) {
                     // Profile picture is now uploaded
-                    println("Profile picture uploaded: ${response.body()?.url}")
+                    println("Profile picture uploaded: ${response.body()?.data?.url}")
                 } else {
                     _errorMessage.value = "Failed to upload profile picture: ${response.code()}"
                 }

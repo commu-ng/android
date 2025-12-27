@@ -38,8 +38,12 @@ data class UpdateProfileRequest(
 data class ProfilePicture(
     val id: String,
     val url: String,
-    val width: Int,
-    val height: Int
+    val width: Int?,
+    val height: Int?
+)
+
+data class ProfilePictureResponse(
+    val data: ProfilePicture
 )
 
 // MARK: - Online Status

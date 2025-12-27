@@ -452,8 +452,9 @@ interface ApiService {
     @Multipart
     @POST("/app/profile-picture")
     suspend fun uploadProfilePicture(
+        @Query("profile_id") profileId: String,
         @Part file: okhttp3.MultipartBody.Part
-    ): Response<ProfilePicture>
+    ): Response<ProfilePictureResponse>
 
     @GET("/app/profiles/online-status")
     suspend fun getOnlineStatus(
