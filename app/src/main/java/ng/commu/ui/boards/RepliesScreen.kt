@@ -178,15 +178,30 @@ fun RepliesScreen(
     }
 }
 
+// Blue colors for depth-based left border (matching web version)
+private val depthBorderColors = listOf(
+    Color(0xFF93C5FD), // blue-300
+    Color(0xFF60A5FA), // blue-400
+    Color(0xFF3B82F6), // blue-500
+    Color(0xFF2563EB), // blue-600
+    Color(0xFF1D4ED8)  // blue-700
+)
+
 @Composable
 fun ReplyItem(
     reply: BoardPostReply,
     depth: Int,
     onReplyClick: (BoardPostReply) -> Unit
 ) {
-    // Visual depth is capped at 2
-    val visualDepth = min(depth, 2)
-    val indentationPadding = (visualDepth * 20).dp
+    // Visual depth is capped at 5
+    val visualDepth = min(depth, 5)
+    val indentationPadding = (visualDepth * 16).dp
+    val isReply = depth > 0
+    val borderColor = if (isReply) {
+        depthBorderColors[min(depth - 1, depthBorderColors.size - 1)]
+    } else {
+        Color.Transparent
+    }
 
     Column(
         modifier = Modifier
@@ -194,20 +209,17 @@ fun ReplyItem(
             .padding(start = indentationPadding)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
-            // Indent indicator
-            if (visualDepth > 0) {
+            // Left border indicator (like web version)
+            if (isReply) {
                 Box(
                     modifier = Modifier
-                        .width(2.dp)
-                        .height(60.dp)
-                        .background(
-                            MaterialTheme.colorScheme.outlineVariant,
-                            shape = RoundedCornerShape(1.dp)
-                        )
+                        .width(4.dp)
+                        .fillMaxHeight()
+                        .background(borderColor)
                 )
+                Spacer(modifier = Modifier.width(8.dp))
             }
 
             Column(
@@ -226,7 +238,7 @@ fun ReplyItem(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (depth > 2) {
+                        if (isReply) {
                             Text(
                                 text = "↳",
                                 style = MaterialTheme.typography.bodySmall,
@@ -235,7 +247,7 @@ fun ReplyItem(
                         }
                         Text(
                             text = "@${reply.author.loginName}",
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = if (isReply) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
@@ -249,7 +261,7 @@ fun ReplyItem(
                 // Content
                 Text(
                     text = reply.content,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = if (isReply) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium
                 )
 
                 // Actions
@@ -259,7 +271,7 @@ fun ReplyItem(
                 ) {
                     Text(
                         text = "Reply",
-                        fontSize = 12.sp
+                        fontSize = if (isReply) 11.sp else 12.sp
                     )
                 }
             }

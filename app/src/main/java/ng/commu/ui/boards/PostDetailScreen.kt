@@ -560,6 +560,15 @@ fun ReplyCompositionBar(
     }
 }
 
+// Blue colors for depth-based left border (matching web version)
+private val depthBorderColors = listOf(
+    android.graphics.Color.parseColor("#93C5FD"), // blue-300
+    android.graphics.Color.parseColor("#60A5FA"), // blue-400
+    android.graphics.Color.parseColor("#3B82F6"), // blue-500
+    android.graphics.Color.parseColor("#2563EB"), // blue-600
+    android.graphics.Color.parseColor("#1D4ED8")  // blue-700
+).map { androidx.compose.ui.graphics.Color(it) }
+
 @Composable
 fun ReplyItem(
     reply: BoardPostReply,
@@ -573,12 +582,19 @@ fun ReplyItem(
     onNavigateBack: () -> Unit
 ) {
     val visualDepth = minOf(depth, 5)
-    val indentPadding = (visualDepth * 20).dp
+    val indentPadding = (visualDepth * 16).dp
+    val isReply = depth > 0
     val isAuthor = currentUserId != null && currentUserId == reply.author.id
     val isLoggedIn = currentUserId != null
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showBlockDialog by remember { mutableStateOf(false) }
     var showMenu by remember { mutableStateOf(false) }
+
+    val borderColor = if (isReply) {
+        depthBorderColors[minOf(depth - 1, depthBorderColors.size - 1)]
+    } else {
+        androidx.compose.ui.graphics.Color.Transparent
+    }
 
     Column {
         // Main reply content with indentation
@@ -586,16 +602,17 @@ fun ReplyItem(
             modifier = Modifier.padding(start = indentPadding)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if (visualDepth > 0) {
+                // Left border indicator (like web version)
+                if (isReply) {
                     Box(
                         modifier = Modifier
-                            .width(2.dp)
-                            .height(48.dp)
-                            .background(MaterialTheme.colorScheme.outlineVariant)
+                            .width(4.dp)
+                            .fillMaxHeight()
+                            .background(borderColor)
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
                 }
 
                 Column(modifier = Modifier.weight(1f)) {
@@ -603,26 +620,35 @@ fun ReplyItem(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        // Reply indicator
+                        if (isReply) {
+                            Text(
+                                text = "↳",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
                         if (reply.author.avatarUrl != null) {
                             AsyncImage(
                                 model = reply.author.avatarUrl,
                                 contentDescription = "User avatar",
                                 modifier = Modifier
-                                    .size(24.dp)
+                                    .size(if (isReply) 20.dp else 24.dp)
                                     .clip(CircleShape)
                             )
                         } else {
                             Icon(
                                 imageVector = Icons.Filled.Person,
                                 contentDescription = "User avatar",
-                                modifier = Modifier.size(24.dp),
+                                modifier = Modifier.size(if (isReply) 20.dp else 24.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
 
                         Text(
                             text = reply.author.loginName,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = if (isReply) MaterialTheme.typography.labelMedium else MaterialTheme.typography.bodySmall,
                             fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
                         )
 
@@ -630,7 +656,7 @@ fun ReplyItem(
 
                         Text(
                             text = formatRelativeTime(reply.createdAt),
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
@@ -685,7 +711,7 @@ fun ReplyItem(
 
                     Text(
                         text = reply.content,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = if (isReply) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium
                     )
 
                     // Reply button (only for authenticated users)
@@ -697,10 +723,13 @@ fun ReplyItem(
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Reply",
-                                modifier = Modifier.size(12.dp)
+                                modifier = Modifier.size(if (isReply) 10.dp else 12.dp)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text(stringResource(R.string.action_reply), style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                stringResource(R.string.action_reply),
+                                style = if (isReply) MaterialTheme.typography.labelSmall else MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 }

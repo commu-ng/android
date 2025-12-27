@@ -1,5 +1,6 @@
 package ng.commu.ui.app.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -273,6 +274,15 @@ private fun ParentPostCard(
     }
 }
 
+// Blue colors for depth-based left border (matching web version)
+private val depthBorderColors = listOf(
+    androidx.compose.ui.graphics.Color(0xFF93C5FD), // blue-300
+    androidx.compose.ui.graphics.Color(0xFF60A5FA), // blue-400
+    androidx.compose.ui.graphics.Color(0xFF3B82F6), // blue-500
+    androidx.compose.ui.graphics.Color(0xFF2563EB), // blue-600
+    androidx.compose.ui.graphics.Color(0xFF1D4ED8)  // blue-700
+)
+
 @Composable
 private fun ThreadedReplyView(
     reply: CommunityPost,
@@ -284,28 +294,45 @@ private fun ThreadedReplyView(
     onProfileClick: (String) -> Unit = {},
     onDeleteClick: (() -> Unit)? = null
 ) {
-    val indentationWidth = (minOf(depth, 5) * 20).dp
-    val depthColors = listOf(
-        MaterialTheme.colorScheme.primary,
-        MaterialTheme.colorScheme.secondary,
-        MaterialTheme.colorScheme.tertiary,
-        MaterialTheme.colorScheme.error,
-        MaterialTheme.colorScheme.surfaceVariant
-    )
-    val depthColor = depthColors[minOf(depth, depthColors.size - 1)].copy(alpha = 0.3f)
+    val indentationWidth = (minOf(depth, 5) * 16).dp
+    val isReply = depth > 0
+    val borderColor = if (isReply) {
+        depthBorderColors[minOf(depth - 1, depthBorderColors.size - 1)]
+    } else {
+        androidx.compose.ui.graphics.Color.Transparent
+    }
 
-    Row(modifier = Modifier.fillMaxWidth()) {
-        if (depth > 0) {
-            Surface(
-                color = depthColor,
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = indentationWidth)
+    ) {
+        // Left border indicator (like web version)
+        if (isReply) {
+            androidx.compose.foundation.layout.Box(
                 modifier = Modifier
-                    .width(3.dp)
+                    .width(4.dp)
                     .fillMaxHeight()
-                    .padding(start = indentationWidth - 3.dp)
-            ) {}
+                    .background(borderColor)
+            )
         }
 
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
+            // Reply indicator
+            if (isReply) {
+                Row(
+                    modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "↳",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
             PostCard(
                 post = reply,
                 currentProfileId = currentProfileId,
@@ -316,8 +343,9 @@ private fun ThreadedReplyView(
                 onDeleteClick = onDeleteClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                isDetail = false
+                    .padding(horizontal = 16.dp, vertical = if (isReply) 8.dp else 16.dp),
+                isDetail = false,
+                isReply = isReply
             )
             HorizontalDivider()
         }

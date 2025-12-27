@@ -45,7 +45,8 @@ fun PostCard(
     onDeleteClick: (() -> Unit)? = null,
     onReportClick: ((String) -> Unit)? = null,
     modifier: Modifier = Modifier,
-    isDetail: Boolean = false
+    isDetail: Boolean = false,
+    isReply: Boolean = false
 ) {
     var showReactionPicker by remember { mutableStateOf(false) }
     var showSensitiveContent by remember { mutableStateOf(false) }
@@ -162,11 +163,11 @@ fun PostCard(
                 else Modifier
             ),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = if (isReply) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surface
         )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(if (isReply) 12.dp else 16.dp)
         ) {
             // Header - Profile info
             Row(
@@ -175,12 +176,12 @@ fun PostCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(if (isReply) 8.dp else 12.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.clickable { onProfileClick(post.author.username) }
                 ) {
                     // Avatar
-                    val avatarSize = if (isDetail) 50.dp else 40.dp
+                    val avatarSize = if (isDetail) 50.dp else if (isReply) 32.dp else 40.dp
                     Box(
                         modifier = Modifier
                             .size(avatarSize)
@@ -213,6 +214,7 @@ fun PostCard(
                             Text(
                                 text = post.author.name,
                                 style = if (isDetail) MaterialTheme.typography.titleMedium
+                                else if (isReply) MaterialTheme.typography.bodySmall
                                 else MaterialTheme.typography.bodyMedium,
                                 fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
                             )
@@ -231,17 +233,17 @@ fun PostCard(
                         ) {
                             Text(
                                 text = "@${post.author.username}",
-                                style = MaterialTheme.typography.bodySmall,
+                                style = if (isReply) MaterialTheme.typography.labelSmall else MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
                                 text = "•",
-                                style = MaterialTheme.typography.bodySmall,
+                                style = if (isReply) MaterialTheme.typography.labelSmall else MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
                                 text = DateUtils.getRelativeTime(post.createdAt),
-                                style = MaterialTheme.typography.bodySmall,
+                                style = if (isReply) MaterialTheme.typography.labelSmall else MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -322,7 +324,7 @@ fun PostCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(if (isReply) 8.dp else 12.dp))
 
             // Content Warning
             if (post.contentWarning != null && !showSensitiveContent) {
@@ -368,7 +370,7 @@ fun PostCard(
 
             // Reactions Summary
             if (!post.reactions.isNullOrEmpty()) {
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(if (isReply) 8.dp else 12.dp))
                 ReactionsSummary(
                     reactions = post.reactions,
                     currentProfileId = currentProfileId,
@@ -376,7 +378,7 @@ fun PostCard(
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(if (isReply) 8.dp else 12.dp))
 
             // Actions
             Row(
@@ -384,7 +386,8 @@ fun PostCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                val iconSize = if (isReply) 16.dp else 18.dp
+                Row(horizontalArrangement = Arrangement.spacedBy(if (isReply) 16.dp else 20.dp)) {
                     // Reply count
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -393,12 +396,12 @@ fun PostCard(
                         Icon(
                             imageVector = Icons.Outlined.ChatBubbleOutline,
                             contentDescription = stringResource(R.string.cd_replies),
-                            modifier = Modifier.size(18.dp),
+                            modifier = Modifier.size(iconSize),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
                             text = "${post.replyCount}",
-                            style = MaterialTheme.typography.bodySmall,
+                            style = if (isReply) MaterialTheme.typography.labelSmall else MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -415,14 +418,14 @@ fun PostCard(
                                 imageVector = if (userReaction != null) Icons.Filled.AddReaction
                                 else Icons.Outlined.AddReaction,
                                 contentDescription = stringResource(R.string.cd_react),
-                                modifier = Modifier.size(18.dp),
+                                modifier = Modifier.size(iconSize),
                                 tint = if (userReaction != null) MaterialTheme.colorScheme.primary
                                 else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             if (!post.reactions.isNullOrEmpty()) {
                                 Text(
                                     text = "${post.reactions.size}",
-                                    style = MaterialTheme.typography.bodySmall,
+                                    style = if (isReply) MaterialTheme.typography.labelSmall else MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
@@ -434,13 +437,13 @@ fun PostCard(
                 if (currentProfileId != null) {
                     IconButton(
                         onClick = onBookmarkClick,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(if (isReply) 20.dp else 24.dp)
                     ) {
                         Icon(
                             imageVector = if (post.isBookmarked == true) Icons.Filled.Star
                             else Icons.Outlined.StarBorder,
                             contentDescription = stringResource(R.string.cd_bookmark),
-                            modifier = Modifier.size(18.dp),
+                            modifier = Modifier.size(iconSize),
                             tint = if (post.isBookmarked == true) MaterialTheme.colorScheme.primary
                             else MaterialTheme.colorScheme.onSurfaceVariant
                         )
