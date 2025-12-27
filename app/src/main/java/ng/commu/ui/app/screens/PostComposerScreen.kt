@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -90,17 +91,40 @@ fun PostComposerScreen(
                     }
                 },
                 actions = {
+                    val coroutineScope = rememberCoroutineScope()
                     Button(
                         onClick = {
                             currentProfile?.id?.let { profileId ->
-                                composerViewModel.createPost(
-                                    profileId = profileId,
-                                    inReplyToId = inReplyToPostId,
-                                    onSuccess = {
-                                        composerViewModel.reset()
-                                        onPostCreated()
+                                coroutineScope.launch {
+                                    // Upload images first if any are selected
+                                    if (selectedImages.isNotEmpty()) {
+                                        val imageFiles = selectedImages.mapNotNull { uri ->
+                                            try {
+                                                val inputStream = context.contentResolver.openInputStream(uri)
+                                                val file = File(context.cacheDir, "upload_${System.currentTimeMillis()}.jpg")
+                                                inputStream?.use { input ->
+                                                    FileOutputStream(file).use { output ->
+                                                        input.copyTo(output)
+                                                    }
+                                                }
+                                                file
+                                            } catch (e: Exception) {
+                                                null
+                                            }
+                                        }
+                                        val uploadSuccess = composerViewModel.uploadImages(imageFiles)
+                                        if (!uploadSuccess) return@launch
                                     }
-                                )
+
+                                    composerViewModel.createPost(
+                                        profileId = profileId,
+                                        inReplyToId = inReplyToPostId,
+                                        onSuccess = {
+                                            composerViewModel.reset()
+                                            onPostCreated()
+                                        }
+                                    )
+                                }
                             }
                         },
                         enabled = content.isNotBlank() && !isSubmitting && !isUploading && currentProfile != null

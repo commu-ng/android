@@ -133,7 +133,7 @@ class PostRepository @Inject constructor(
 
     // MARK: - Image Upload
 
-    suspend fun uploadImage(file: File) = apiService.uploadImage(
+    suspend fun uploadImage(file: File) = apiService.uploadAppImage(
         MultipartBody.Part.createFormData(
             "file",
             file.name,
@@ -141,7 +141,7 @@ class PostRepository @Inject constructor(
         )
     )
 
-    suspend fun uploadPostImage(imageData: ByteArray, filename: String) = apiService.uploadImage(
+    suspend fun uploadPostImage(imageData: ByteArray, filename: String) = apiService.uploadAppImage(
         MultipartBody.Part.createFormData(
             "file",
             filename,

@@ -56,6 +56,10 @@ interface ApiService {
     @POST("/console/upload/file")
     suspend fun uploadImage(@Part file: okhttp3.MultipartBody.Part): Response<ImageUploadResponseWrapper>
 
+    @Multipart
+    @POST("/app/upload/file")
+    suspend fun uploadAppImage(@Part file: okhttp3.MultipartBody.Part): Response<ImageUploadResponseWrapper>
+
     @POST("/console/board/{boardSlug}/posts")
     suspend fun createPost(
         @Path("boardSlug") boardSlug: String,
