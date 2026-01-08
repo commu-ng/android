@@ -443,7 +443,7 @@ interface ApiService {
         @Body request: CreateProfileRequest
     ): Response<ApiResponse<Profile>>
 
-    @PUT("/app/profiles")
+    @PUT("/app/me/profiles")
     suspend fun updateProfile(
         @Query("profile_id") profileId: String,
         @Body request: UpdateProfileRequest
