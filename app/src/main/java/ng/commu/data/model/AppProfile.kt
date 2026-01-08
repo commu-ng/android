@@ -29,7 +29,8 @@ data class CreateProfileRequest(
 )
 
 data class UpdateProfileRequest(
-    val name: String?,
+    val name: String,
+    val username: String,
     val bio: String?
 )
 

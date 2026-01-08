@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ng.commu.data.model.Profile
-import ng.commu.data.model.UpdateProfileRequest
 import ng.commu.data.repository.ProfileRepository
 import javax.inject.Inject
 
@@ -116,15 +115,11 @@ class ProfileSettingsViewModel @Inject constructor(
             _errorMessage.value = null
 
             try {
-                val request = UpdateProfileRequest(
-                    name = _displayName.value.trim(),
-                    bio = if (_bio.value.trim().isEmpty()) null else _bio.value.trim()
-                )
-
                 val response = profileRepository.updateProfile(
-                    profileId,
-                    request.name,
-                    request.bio
+                    profileId = profileId,
+                    name = _displayName.value.trim(),
+                    username = _username.value.trim(),
+                    bio = if (_bio.value.trim().isEmpty()) null else _bio.value.trim()
                 )
                 if (response.isSuccessful) {
                     _currentProfile.value = response.body()?.data

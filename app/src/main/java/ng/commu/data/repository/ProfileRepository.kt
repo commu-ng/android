@@ -52,11 +52,12 @@ class ProfileRepository @Inject constructor(
 
     suspend fun updateProfile(
         profileId: String,
-        name: String?,
+        name: String,
+        username: String,
         bio: String?
     ) = apiService.updateProfile(
         profileId,
-        UpdateProfileRequest(name, bio)
+        UpdateProfileRequest(name, username, bio)
     )
 
     suspend fun setPrimaryProfile(
