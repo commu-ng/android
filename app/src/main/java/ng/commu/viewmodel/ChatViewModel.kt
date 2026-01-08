@@ -84,8 +84,8 @@ class ChatViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body != null) {
-                        // Messages come in reverse chronological order, reverse for chat display
-                        _messages.value = body.data.reversed()
+                        // Messages come in chronological order (oldest first)
+                        _messages.value = body.data
                         nextCursor = body.pagination.nextCursor
                         _hasMore.value = body.pagination.hasMore
                         Log.d(TAG, "Loaded ${body.data.size} messages")
@@ -126,8 +126,8 @@ class ChatViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body != null) {
-                        // Prepend older messages (reversed)
-                        _messages.value = body.data.reversed() + _messages.value
+                        // Prepend older messages
+                        _messages.value = body.data + _messages.value
                         nextCursor = body.pagination.nextCursor
                         _hasMore.value = body.pagination.hasMore
                         Log.d(TAG, "Loaded ${body.data.size} more messages")
@@ -271,7 +271,7 @@ class ChatViewModel @Inject constructor(
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
-                    val newMessages = body.data.reversed()
+                    val newMessages = body.data
                     if (newMessages.size != _messages.value.size ||
                         (newMessages.isNotEmpty() && _messages.value.isNotEmpty() &&
                          newMessages.last().id != _messages.value.last().id)) {
