@@ -132,7 +132,7 @@ fun AppProfileScreen(
                             }
                         }
 
-                        if (profile.isPrimary) {
+                        if (profile.isPrimary == true) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Surface(
                                 color = MaterialTheme.colorScheme.primaryContainer,

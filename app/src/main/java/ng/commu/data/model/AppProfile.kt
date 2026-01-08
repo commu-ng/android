@@ -13,7 +13,7 @@ data class Profile(
     @Json(name = "community_id") val communityId: String? = null,
     @Json(name = "created_at") val createdAt: String,
     @Json(name = "updated_at") val updatedAt: String,
-    @Json(name = "is_primary") val isPrimary: Boolean,
+    @Json(name = "is_primary") val isPrimary: Boolean? = null,
     @Json(name = "is_online") val isOnline: Boolean?,
     @Json(name = "is_active") val isActive: Boolean?,
     val role: String?

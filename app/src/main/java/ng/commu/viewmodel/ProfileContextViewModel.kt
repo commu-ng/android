@@ -65,7 +65,7 @@ class ProfileContextViewModel @Inject constructor(
                     // Restore saved profile for this community, or select primary (default) profile
                     val savedId = prefs.getString(KEY_PREFIX + communityId, null)
                     val savedProfile = savedId?.let { id -> profiles.firstOrNull { it.id == id } }
-                    val primaryProfile = profiles.firstOrNull { it.isPrimary }
+                    val primaryProfile = profiles.firstOrNull { it.isPrimary == true }
                     val profile = savedProfile ?: primaryProfile ?: profiles.firstOrNull()
 
                     if (profile != null) {

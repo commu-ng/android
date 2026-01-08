@@ -241,7 +241,7 @@ private fun ProfileItem(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    if (profile.isPrimary) {
+                    if (profile.isPrimary == true) {
                         Surface(
                             shape = MaterialTheme.shapes.small,
                             color = MaterialTheme.colorScheme.tertiaryContainer
