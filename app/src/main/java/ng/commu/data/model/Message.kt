@@ -89,7 +89,6 @@ data class GroupChatMessagesResponse(
 data class SendMessageRequest(
     val content: String,
     @Json(name = "receiver_id") val receiverId: String,
-    @Json(name = "profile_id") val profileId: String,
     @Json(name = "image_ids") val imageIds: List<String>?
 )
 

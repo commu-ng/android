@@ -309,6 +309,7 @@ interface ApiService {
 
     @POST("/app/messages")
     suspend fun sendMessage(
+        @Query("profile_id") profileId: String,
         @Body request: SendMessageRequest
     ): Response<ApiResponse<Message>>
 

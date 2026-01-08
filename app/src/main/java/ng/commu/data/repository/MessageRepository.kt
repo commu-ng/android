@@ -30,10 +30,10 @@ class MessageRepository @Inject constructor(
         content: String,
         imageIds: List<String>? = null
     ) = apiService.sendMessage(
-        SendMessageRequest(
+        profileId = profileId,
+        request = SendMessageRequest(
             content = content,
             receiverId = receiverId,
-            profileId = profileId,
             imageIds = imageIds
         )
     )
