@@ -347,6 +347,9 @@ fun AppProfileScreen(
         }
     }
 
+    // Check if current profile can create new profiles (moderators and owners only)
+    val canCreateProfile = currentProfile?.role in listOf("owner", "moderator")
+
     // Profile Switcher Dialog
     if (showProfileSwitcher) {
         ProfileSwitcherDialog(
@@ -359,7 +362,8 @@ fun AppProfileScreen(
             onCreateProfile = {
                 // Navigate to profile creation
                 showProfileSwitcher = false
-            }
+            },
+            canCreateProfile = canCreateProfile
         )
     }
 }

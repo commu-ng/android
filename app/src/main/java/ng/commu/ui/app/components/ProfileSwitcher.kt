@@ -29,7 +29,8 @@ fun ProfileSwitcherDialog(
     onDismiss: () -> Unit,
     onProfileSelected: (Profile) -> Unit,
     onCreateProfile: () -> Unit,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    canCreateProfile: Boolean = false
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -79,18 +80,20 @@ fun ProfileSwitcherDialog(
                                     style = MaterialTheme.typography.titleMedium
                                 )
                                 Text(
-                                    text = "Create your first profile in this community",
+                                    text = if (canCreateProfile) "Create your first profile in this community" else "No profiles available",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Button(onClick = {
-                                    onCreateProfile()
-                                    onDismiss()
-                                }) {
-                                    Icon(Icons.Default.Add, contentDescription = null)
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(stringResource(R.string.profile_create))
+                                if (canCreateProfile) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Button(onClick = {
+                                        onCreateProfile()
+                                        onDismiss()
+                                    }) {
+                                        Icon(Icons.Default.Add, contentDescription = null)
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(stringResource(R.string.profile_create))
+                                    }
                                 }
                             }
                         }
@@ -113,42 +116,44 @@ fun ProfileSwitcherDialog(
                                 )
                             }
 
-                            // Add "Create New Profile" option
-                            item {
-                                Surface(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            onCreateProfile()
-                                            onDismiss()
-                                        }
-                                ) {
-                                    Row(
+                            // Add "Create New Profile" option (only for moderators/owners)
+                            if (canCreateProfile) {
+                                item {
+                                    Surface(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(16.dp),
-                                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Surface(
-                                            modifier = Modifier.size(48.dp),
-                                            shape = CircleShape,
-                                            color = MaterialTheme.colorScheme.primaryContainer
-                                        ) {
-                                            Box(contentAlignment = Alignment.Center) {
-                                                Icon(
-                                                    imageVector = Icons.Default.Add,
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                                )
+                                            .clickable {
+                                                onCreateProfile()
+                                                onDismiss()
                                             }
-                                        }
+                                    ) {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Surface(
+                                                modifier = Modifier.size(48.dp),
+                                                shape = CircleShape,
+                                                color = MaterialTheme.colorScheme.primaryContainer
+                                            ) {
+                                                Box(contentAlignment = Alignment.Center) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Add,
+                                                        contentDescription = null,
+                                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                                    )
+                                                }
+                                            }
 
-                                        Text(
-                                            text = "Create New Profile",
-                                            style = MaterialTheme.typography.titleMedium,
-                                            color = MaterialTheme.colorScheme.primary
-                                        )
+                                            Text(
+                                                text = "Create New Profile",
+                                                style = MaterialTheme.typography.titleMedium,
+                                                color = MaterialTheme.colorScheme.primary
+                                            )
+                                        }
                                     }
                                 }
                             }

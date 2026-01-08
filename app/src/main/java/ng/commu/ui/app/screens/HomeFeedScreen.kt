@@ -72,6 +72,9 @@ fun HomeFeedScreen(
             }
     }
 
+    // Check if current profile can create new profiles (moderators and owners only)
+    val canCreateProfile = currentProfile?.role in listOf("owner", "moderator")
+
     // Show profile switcher dialog
     if (showProfileSwitcher) {
         ProfileSwitcherDialog(
@@ -82,7 +85,8 @@ fun HomeFeedScreen(
                 profileViewModel.switchProfile(profile)
             },
             onCreateProfile = onCreateProfile,
-            isLoading = isLoadingProfiles
+            isLoading = isLoadingProfiles,
+            canCreateProfile = canCreateProfile
         )
     }
 
