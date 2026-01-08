@@ -72,8 +72,8 @@ fun HomeFeedScreen(
             }
     }
 
-    // Check if current profile can create new profiles (moderators and owners only)
-    val canCreateProfile = currentProfile?.role in listOf("owner", "moderator")
+    // Check if user can create new profiles (community moderators and owners only)
+    val canCreateProfile = currentCommunity?.role in listOf("owner", "moderator")
 
     // Show profile switcher dialog
     if (showProfileSwitcher) {
