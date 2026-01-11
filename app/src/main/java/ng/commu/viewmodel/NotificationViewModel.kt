@@ -39,7 +39,9 @@ class NotificationViewModel @Inject constructor(
         }
 
         // If not refreshing and already loading or no more items, skip
-        if (!refresh && (_notificationsState.value is NotificationsUiState.Loading || !hasMore && currentCursor != null)) {
+        val isLoading = _notificationsState.value is NotificationsUiState.Loading ||
+            _notificationsState.value is NotificationsUiState.LoadingMore
+        if (!refresh && (isLoading || !hasMore)) {
             return
         }
 
@@ -66,7 +68,7 @@ class NotificationViewModel @Inject constructor(
                     hasMore = response.pagination.hasMore
 
                     _notificationsState.value = NotificationsUiState.Success(
-                        notifications = existingNotifications + response.data
+                        notifications = (existingNotifications + response.data).distinctBy { it.id }
                     )
                 }
                 .onFailure { error ->
