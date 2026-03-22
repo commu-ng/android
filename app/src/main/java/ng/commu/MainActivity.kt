@@ -425,6 +425,10 @@ class MainActivity : ComponentActivity() {
             if (tabId == selectedTabId) {
                 urlBarText.text = url ?: ""
             }
+            // Retry communities fetch on console URL changes (e.g. after login)
+            if (tabId == "console" && !communitiesFetched) {
+                fetchCommunities()
+            }
         }
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
