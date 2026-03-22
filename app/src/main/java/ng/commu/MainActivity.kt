@@ -36,6 +36,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -364,10 +365,26 @@ class MainActivity : ComponentActivity() {
                         communitiesFetched = true
                         onCommunitiesLoaded(communities)
                         requestNotificationPermission()
+                        fetchAndInjectPushToken()
                     }
                 }
                 conn.disconnect()
             } catch (_: Exception) {
+            }
+        }
+    }
+
+    private fun fetchAndInjectPushToken() {
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            getSharedPreferences("commung", Context.MODE_PRIVATE)
+                .edit()
+                .putString("fcm_token", token)
+                .apply()
+            for (wv in webViews.values) {
+                wv.evaluateJavascript(
+                    "window.commungNative = { pushToken: '$token', platform: 'android' };",
+                    null
+                )
             }
         }
     }
