@@ -341,6 +341,48 @@ class MainActivity : ComponentActivity() {
         NotificationManagerCompat.from(this).cancelAll()
     }
 
+    private fun checkForLogout() {
+        val cookies = CookieManager.getInstance().getCookie("https://api.commu.ng")
+        if (cookies == null || !cookies.contains("session_token")) {
+            handleLogout()
+        }
+    }
+
+    private fun handleLogout() {
+        // Deregister push token
+        val pushToken = getSharedPreferences("commung", Context.MODE_PRIVATE)
+            .getString("fcm_token", null)
+        if (pushToken != null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val url = URL("https://api.commu.ng/console/devices/$pushToken")
+                    val conn = url.openConnection() as HttpURLConnection
+                    conn.requestMethod = "DELETE"
+                    conn.responseCode
+                    conn.disconnect()
+                } catch (_: Exception) {
+                }
+            }
+        }
+
+        // Clear all cookies
+        CookieManager.getInstance().removeAllCookies(null)
+        CookieManager.getInstance().flush()
+
+        // Remove community webviews
+        for (tab in tabs.filter { it.id != "console" }) {
+            val wv = webViews.remove(tab.id)
+            (wv?.parent as? View)?.let { webViewContainer.removeView(it) }
+            loadedTabs.remove(tab.id)
+        }
+
+        // Reset state
+        communitiesFetched = false
+        tabs.removeAll { it.id != "console" }
+        selectedTabId = "console"
+        updateTabBar()
+    }
+
     private fun fetchCommunities() {
         val cookie = CookieManager.getInstance().getCookie("https://api.commu.ng") ?: return
 
@@ -442,9 +484,12 @@ class MainActivity : ComponentActivity() {
             if (tabId == selectedTabId) {
                 urlBarText.text = url ?: ""
             }
-            // Retry communities fetch on console URL changes (e.g. after login)
-            if (tabId == "console" && !communitiesFetched) {
-                fetchCommunities()
+            if (tabId == "console") {
+                if (!communitiesFetched) {
+                    fetchCommunities()
+                } else {
+                    checkForLogout()
+                }
             }
         }
 
