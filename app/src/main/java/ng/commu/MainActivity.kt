@@ -365,10 +365,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Clear all cookies
-        CookieManager.getInstance().removeAllCookies(null)
-        CookieManager.getInstance().flush()
-
         // Remove community webviews
         for (tab in tabs.filter { it.id != "console" }) {
             val wv = webViews.remove(tab.id)
@@ -376,7 +372,7 @@ class MainActivity : ComponentActivity() {
             loadedTabs.remove(tab.id)
         }
 
-        // Reset state
+        // Reset state — don't reload console, the web app already navigated to login
         communitiesFetched = false
         tabs.removeAll { it.id != "console" }
         selectedTabId = "console"
