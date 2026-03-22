@@ -341,9 +341,15 @@ class MainActivity : ComponentActivity() {
         NotificationManagerCompat.from(this).cancelAll()
     }
 
-    private fun checkForLogout() {
+    private var isFetchingCommunities = false
+
+    private fun checkSessionState() {
         val cookies = CookieManager.getInstance().getCookie("https://api.commu.ng")
-        if (cookies == null || !cookies.contains("session_token")) {
+        val hasSession = cookies != null && cookies.contains("session_token")
+
+        if (hasSession && !communitiesFetched && !isFetchingCommunities) {
+            fetchCommunities()
+        } else if (!hasSession && communitiesFetched) {
             handleLogout()
         }
     }
@@ -381,6 +387,7 @@ class MainActivity : ComponentActivity() {
 
     private fun fetchCommunities() {
         val cookie = CookieManager.getInstance().getCookie("https://api.commu.ng") ?: return
+        isFetchingCommunities = true
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -400,29 +407,50 @@ class MainActivity : ComponentActivity() {
                         communities.add(c.getString("slug") to c.getString("name"))
                     }
                     withContext(Dispatchers.Main) {
+                        isFetchingCommunities = false
                         communitiesFetched = true
                         onCommunitiesLoaded(communities)
                         requestNotificationPermission()
-                        fetchAndInjectPushToken()
+                        fetchAndRegisterPushToken()
                     }
+                } else {
+                    withContext(Dispatchers.Main) { isFetchingCommunities = false }
                 }
                 conn.disconnect()
             } catch (_: Exception) {
+                withContext(Dispatchers.Main) { isFetchingCommunities = false }
             }
         }
     }
 
-    private fun fetchAndInjectPushToken() {
+    private fun fetchAndRegisterPushToken() {
+        val cookie = CookieManager.getInstance().getCookie("https://api.commu.ng") ?: return
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
             getSharedPreferences("commung", Context.MODE_PRIVATE)
                 .edit()
                 .putString("fcm_token", token)
                 .apply()
-            for (wv in webViews.values) {
-                wv.evaluateJavascript(
-                    "window.commungNative = { pushToken: '$token', platform: 'android' };",
-                    null
-                )
+            // Register device natively
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val url = URL("https://api.commu.ng/console/devices")
+                    val conn = url.openConnection() as HttpURLConnection
+                    conn.requestMethod = "POST"
+                    conn.setRequestProperty("Content-Type", "application/json")
+                    conn.setRequestProperty("Cookie", cookie)
+                    conn.doOutput = true
+                    val body = JSONObject().apply {
+                        put("push_token", token)
+                        put("platform", "android")
+                        put("device_model", Build.MODEL)
+                        put("os_version", "Android ${Build.VERSION.RELEASE}")
+                        put("app_version", packageManager.getPackageInfo(packageName, 0).versionName)
+                    }
+                    conn.outputStream.write(body.toString().toByteArray())
+                    conn.responseCode
+                    conn.disconnect()
+                } catch (_: Exception) {
+                }
             }
         }
     }
@@ -481,11 +509,7 @@ class MainActivity : ComponentActivity() {
                 urlBarText.text = url ?: ""
             }
             if (tabId == "console") {
-                if (!communitiesFetched) {
-                    fetchCommunities()
-                } else {
-                    checkForLogout()
-                }
+                checkSessionState()
             }
         }
 
@@ -504,20 +528,10 @@ class MainActivity : ComponentActivity() {
                 urlBarText.text = url ?: ""
                 setRefreshLoading(false)
             }
-            injectPushToken(view)
-
-            if (tabId == "console" && !communitiesFetched) {
-                fetchCommunities()
+            if (tabId == "console") {
+                checkSessionState()
             }
         }
     }
 
-    private fun injectPushToken(view: WebView?) {
-        val token = getSharedPreferences("commung", Context.MODE_PRIVATE)
-            .getString("fcm_token", null) ?: return
-        view?.evaluateJavascript(
-            "window.commungNative = { pushToken: '$token', platform: 'android' };",
-            null
-        )
-    }
 }
