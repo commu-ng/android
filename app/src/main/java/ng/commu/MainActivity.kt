@@ -356,14 +356,16 @@ class MainActivity : ComponentActivity() {
 
     private fun handleLogout() {
         // Deregister push token
+        val cookie = CookieManager.getInstance().getCookie("https://api.commu.ng")
         val pushToken = getSharedPreferences("commung", Context.MODE_PRIVATE)
             .getString("fcm_token", null)
-        if (pushToken != null) {
+        if (pushToken != null && cookie != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val url = URL("https://api.commu.ng/console/devices/$pushToken")
                     val conn = url.openConnection() as HttpURLConnection
                     conn.requestMethod = "DELETE"
+                    conn.setRequestProperty("Cookie", cookie)
                     conn.responseCode
                     conn.disconnect()
                 } catch (_: Exception) {
