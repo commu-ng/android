@@ -37,7 +37,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -369,7 +369,7 @@ class MainActivity : ComponentActivity() {
         val pushToken = getSharedPreferences("commung", Context.MODE_PRIVATE)
             .getString("fcm_token", null)
         if (pushToken != null && cookie != null) {
-            CoroutineScope(Dispatchers.IO).launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 var conn: HttpURLConnection? = null
                 try {
                     val url = URL("https://api.commu.ng/console/devices/$pushToken")
@@ -403,7 +403,7 @@ class MainActivity : ComponentActivity() {
         val cookie = CookieManager.getInstance().getCookie("https://api.commu.ng") ?: return
         isFetchingCommunities = true
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             var conn: HttpURLConnection? = null
             try {
                 val url = URL("https://api.commu.ng/console/communities/mine")
@@ -447,7 +447,7 @@ class MainActivity : ComponentActivity() {
                 .putString("fcm_token", token)
                 .apply()
             // Register device natively
-            CoroutineScope(Dispatchers.IO).launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 var conn: HttpURLConnection? = null
                 try {
                     val url = URL("https://api.commu.ng/console/devices")
