@@ -345,7 +345,7 @@ class MainActivity : ComponentActivity() {
 
     private fun checkSessionState() {
         val cookies = CookieManager.getInstance().getCookie("https://api.commu.ng")
-        val hasSession = cookies != null && cookies.contains("session_token")
+        val hasSession = cookies != null && Regex("(?:^|;\\s*)session_token=").containsMatchIn(cookies)
 
         if (hasSession && !communitiesFetched && !isFetchingCommunities) {
             fetchCommunities()
