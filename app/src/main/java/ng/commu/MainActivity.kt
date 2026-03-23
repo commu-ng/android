@@ -479,7 +479,7 @@ class MainActivity : ComponentActivity() {
         ).toInt()
     }
 
-    private val spinAnimation = RotateAnimation(
+    private fun createSpinAnimation() = RotateAnimation(
         0f, 360f,
         Animation.RELATIVE_TO_SELF, 0.5f,
         Animation.RELATIVE_TO_SELF, 0.5f
@@ -491,7 +491,7 @@ class MainActivity : ComponentActivity() {
 
     private fun setRefreshLoading(loading: Boolean) {
         if (loading) {
-            refreshButton.startAnimation(spinAnimation)
+            refreshButton.startAnimation(createSpinAnimation())
             refreshButton.setOnClickListener { webViews[selectedTabId]?.stopLoading() }
         } else {
             refreshButton.clearAnimation()
