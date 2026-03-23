@@ -205,6 +205,15 @@ class MainActivity : ComponentActivity() {
         clearNotificationBadge()
     }
 
+    override fun onDestroy() {
+        for ((_, wv) in webViews) {
+            (wv.parent as? View)?.let { webViewContainer.removeView(it) }
+            wv.destroy()
+        }
+        webViews.clear()
+        super.onDestroy()
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     private fun createWebView(tabId: String): WebView {
         val wv = WebView(this).apply {
@@ -375,10 +384,11 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Remove community webviews
+        // Remove and destroy community webviews
         for (tab in tabs.filter { it.id != "console" }) {
             val wv = webViews.remove(tab.id)
             (wv?.parent as? View)?.let { webViewContainer.removeView(it) }
+            wv?.destroy()
             loadedTabs.remove(tab.id)
         }
 
