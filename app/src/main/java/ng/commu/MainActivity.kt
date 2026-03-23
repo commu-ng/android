@@ -361,14 +361,16 @@ class MainActivity : ComponentActivity() {
             .getString("fcm_token", null)
         if (pushToken != null && cookie != null) {
             CoroutineScope(Dispatchers.IO).launch {
+                var conn: HttpURLConnection? = null
                 try {
                     val url = URL("https://api.commu.ng/console/devices/$pushToken")
-                    val conn = url.openConnection() as HttpURLConnection
+                    conn = url.openConnection() as HttpURLConnection
                     conn.requestMethod = "DELETE"
                     conn.setRequestProperty("Cookie", cookie)
                     conn.responseCode
-                    conn.disconnect()
                 } catch (_: Exception) {
+                } finally {
+                    conn?.disconnect()
                 }
             }
         }
@@ -392,9 +394,10 @@ class MainActivity : ComponentActivity() {
         isFetchingCommunities = true
 
         CoroutineScope(Dispatchers.IO).launch {
+            var conn: HttpURLConnection? = null
             try {
                 val url = URL("https://api.commu.ng/console/communities/mine")
-                val conn = url.openConnection() as HttpURLConnection
+                conn = url.openConnection() as HttpURLConnection
                 conn.setRequestProperty("Cookie", cookie)
                 conn.connectTimeout = 10_000
                 conn.readTimeout = 10_000
@@ -418,9 +421,10 @@ class MainActivity : ComponentActivity() {
                 } else {
                     withContext(Dispatchers.Main) { isFetchingCommunities = false }
                 }
-                conn.disconnect()
             } catch (_: Exception) {
                 withContext(Dispatchers.Main) { isFetchingCommunities = false }
+            } finally {
+                conn?.disconnect()
             }
         }
     }
@@ -434,9 +438,10 @@ class MainActivity : ComponentActivity() {
                 .apply()
             // Register device natively
             CoroutineScope(Dispatchers.IO).launch {
+                var conn: HttpURLConnection? = null
                 try {
                     val url = URL("https://api.commu.ng/console/devices")
-                    val conn = url.openConnection() as HttpURLConnection
+                    conn = url.openConnection() as HttpURLConnection
                     conn.requestMethod = "POST"
                     conn.setRequestProperty("Content-Type", "application/json")
                     conn.setRequestProperty("Cookie", cookie)
@@ -450,8 +455,9 @@ class MainActivity : ComponentActivity() {
                     }
                     conn.outputStream.write(body.toString().toByteArray())
                     conn.responseCode
-                    conn.disconnect()
                 } catch (_: Exception) {
+                } finally {
+                    conn?.disconnect()
                 }
             }
         }
