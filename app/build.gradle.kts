@@ -42,7 +42,7 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation("androidx.activity:activity-ktx:1.11.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.8")
+    implementation("androidx.fragment:fragment-ktx:1.9.0")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
