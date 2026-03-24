@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
     private val webViews = mutableMapOf<String, WebView>()
     private val loadedTabs = mutableSetOf<String>()
     private var communitiesFetched = false
+    private var pendingNotificationUrl: String? = null
 
     private lateinit var urlBarText: TextView
     private lateinit var refreshButton: ImageView
@@ -192,13 +193,20 @@ class MainActivity : ComponentActivity() {
         tabs.add(Tab("console", getString(R.string.nav_console), "https://commu.ng"))
         createWebView("console")
         val notificationUrl = intent?.getStringExtra("url")
-        selectTab("console", loadUrl = notificationUrl ?: "https://commu.ng")
+        if (notificationUrl != null) {
+            pendingNotificationUrl = notificationUrl
+        }
+        selectTab("console", loadUrl = "https://commu.ng")
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
         val url = intent.getStringExtra("url") ?: return
+        if (!communitiesFetched) {
+            pendingNotificationUrl = url
+            return
+        }
         val tabId = findTabIdForUrl(url)
         selectTab(tabId, loadUrl = url)
     }
@@ -371,6 +379,12 @@ class MainActivity : ComponentActivity() {
             }
         }
         updateTabBar()
+
+        pendingNotificationUrl?.let { url ->
+            pendingNotificationUrl = null
+            val tabId = findTabIdForUrl(url)
+            selectTab(tabId, loadUrl = url)
+        }
     }
 
     private fun findTabIdForUrl(url: String): String {
