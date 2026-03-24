@@ -460,13 +460,12 @@ class MainActivity : ComponentActivity() {
                     val obj = JSONObject(body)
                     val data = obj.getJSONArray("data")
                     val communities = mutableListOf<Triple<String, String, Long?>>()
-                    val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.US).apply {
-                        timeZone = java.util.TimeZone.getTimeZone("UTC")
-                    }
+                    // Drizzle returns timestamps like "2026-01-23 00:00:00+09"
+                    val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ssX", java.util.Locale.US)
                     for (i in 0 until data.length()) {
                         val c = data.getJSONObject(i)
                         val endsAt = if (!c.isNull("ends_at")) {
-                            try { dateFormat.parse(c.getString("ends_at").substringBefore("."))?.time } catch (_: Exception) { null }
+                            try { dateFormat.parse(c.getString("ends_at"))?.time } catch (_: Exception) { null }
                         } else null
                         communities.add(Triple(c.getString("slug"), c.getString("name"), endsAt))
                     }
