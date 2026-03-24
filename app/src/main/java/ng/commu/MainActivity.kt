@@ -45,11 +45,14 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 
-data class Tab(val id: String, val name: String, val url: String)
+data class Tab(val id: String, val name: String, val url: String, val endsAt: Long? = null) {
+    val isFinished: Boolean get() = endsAt != null && endsAt < System.currentTimeMillis()
+}
 
 class MainActivity : ComponentActivity() {
     private val tabs = mutableListOf<Tab>()
     private var selectedTabId = "console"
+    private var showFinished = false
     private val webViews = mutableMapOf<String, WebView>()
     private val loadedTabs = mutableSetOf<String>()
     private var communitiesFetched = false
@@ -286,8 +289,16 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        for (tab in tabs) {
+        val visibleTabs = if (showFinished) {
+            tabs.toList()
+        } else {
+            tabs.filter { it.id == "console" || !it.isFinished || it.id == selectedTabId }
+        }
+        val hasFinishedTabs = tabs.any { it.id != "console" && it.isFinished }
+
+        for (tab in visibleTabs) {
             val isSelected = tab.id == selectedTabId
+            val isFinished = tab.isFinished
             val button = TextView(this).apply {
                 text = tab.name
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
@@ -299,6 +310,7 @@ class MainActivity : ComponentActivity() {
                     if (isSelected) 0xFF007AFF.toInt()
                     else if (isDark) 0xFF8E8E93.toInt() else 0xFF8E8E93.toInt()
                 )
+                alpha = if (isFinished && !isSelected) 0.5f else 1.0f
                 setPadding(dpToPx(14), dpToPx(7), dpToPx(14), dpToPx(7))
                 background = GradientDrawable().apply {
                     setColor(
@@ -316,13 +328,44 @@ class MainActivity : ComponentActivity() {
             lp.setMargins(dpToPx(3), 0, dpToPx(3), 0)
             tabBarContainer.addView(button, lp)
         }
+
+        if (hasFinishedTabs) {
+            val toggleButton = ImageView(this).apply {
+                setImageResource(R.drawable.ic_archive)
+                setPadding(dpToPx(10), dpToPx(7), dpToPx(10), dpToPx(7))
+                if (showFinished) imageAlpha = 255 else imageAlpha = 128
+                background = GradientDrawable().apply {
+                    setColor(if (isDark) 0x1AFFFFFF else 0x0D000000)
+                    cornerRadius = dpToPx(20).toFloat()
+                }
+                setOnClickListener {
+                    showFinished = !showFinished
+                    updateTabBar()
+                }
+            }
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            lp.setMargins(dpToPx(3), 0, dpToPx(3), 0)
+            tabBarContainer.addView(toggleButton, lp)
+        }
     }
 
-    private fun onCommunitiesLoaded(communities: List<Pair<String, String>>) {
+    private fun onCommunitiesLoaded(communities: List<Triple<String, String, Long?>>) {
         tabs.removeAll { it.id != "console" }
-        for ((slug, name) in communities) {
+        val now = System.currentTimeMillis()
+        // Sort: active communities by ends_at ascending, then finished by ends_at descending
+        val sorted = communities.sortedWith(compareBy<Triple<String, String, Long?>> { (_, _, endsAt) ->
+            if (endsAt == null || endsAt >= now) 0 else 1
+        }.thenBy { (_, _, endsAt) ->
+            if (endsAt == null || endsAt >= now) endsAt ?: Long.MAX_VALUE else null
+        }.thenByDescending { (_, _, endsAt) ->
+            if (endsAt != null && endsAt < now) endsAt else null
+        })
+        for ((slug, name, endsAt) in sorted) {
             val ssoUrl = "https://api.commu.ng/auth/sso?return_to=https://$slug.commu.ng/"
-            tabs.add(Tab(slug, name, ssoUrl))
+            tabs.add(Tab(slug, name, ssoUrl, endsAt))
             if (!webViews.containsKey(slug)) {
                 createWebView(slug)
             }
@@ -416,10 +459,16 @@ class MainActivity : ComponentActivity() {
                     val body = conn.inputStream.bufferedReader().readText()
                     val obj = JSONObject(body)
                     val data = obj.getJSONArray("data")
-                    val communities = mutableListOf<Pair<String, String>>()
+                    val communities = mutableListOf<Triple<String, String, Long?>>()
+                    val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.US).apply {
+                        timeZone = java.util.TimeZone.getTimeZone("UTC")
+                    }
                     for (i in 0 until data.length()) {
                         val c = data.getJSONObject(i)
-                        communities.add(c.getString("slug") to c.getString("name"))
+                        val endsAt = if (!c.isNull("ends_at")) {
+                            try { dateFormat.parse(c.getString("ends_at").substringBefore("."))?.time } catch (_: Exception) { null }
+                        } else null
+                        communities.add(Triple(c.getString("slug"), c.getString("name"), endsAt))
                     }
                     withContext(Dispatchers.Main) {
                         isFetchingCommunities = false
