@@ -193,7 +193,7 @@ class MainActivity : ComponentActivity() {
         tabs.add(Tab("console", getString(R.string.nav_console), "https://commu.ng"))
         createWebView("console")
         val notificationUrl = intent?.getStringExtra("url")
-        if (notificationUrl != null) {
+        if (notificationUrl != null && isValidCommuUrl(notificationUrl)) {
             pendingNotificationUrl = notificationUrl
         }
         selectTab("console", loadUrl = "https://commu.ng")
@@ -203,6 +203,7 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         val url = intent.getStringExtra("url") ?: return
+        if (!isValidCommuUrl(url)) return
         if (!communitiesFetched) {
             pendingNotificationUrl = url
             return
@@ -384,6 +385,17 @@ class MainActivity : ComponentActivity() {
             pendingNotificationUrl = null
             val tabId = findTabIdForUrl(url)
             selectTab(tabId, loadUrl = url)
+        }
+    }
+
+    private fun isValidCommuUrl(url: String): Boolean {
+        return try {
+            val uri = android.net.Uri.parse(url)
+            uri.scheme == "https" && uri.host?.let {
+                it == "commu.ng" || it.endsWith(".commu.ng")
+            } == true
+        } catch (_: Exception) {
+            false
         }
     }
 
